@@ -23,6 +23,10 @@ async function getAccessToken(): Promise<string> {
   body.append('client_secret', process.env.CTP_CLIENT_SECRET!);
   body.append('scope', process.env.SCOPE!);
 
+  console.log('Client ID:', process.env.CTP_CLIENT_ID);
+  console.log('Client Secret exists:', !!process.env.CTP_CLIENT_SECRET);
+  console.log('Scope:', process.env.SCOPE);
+
   const res = await fetch(
     'https://auth.europe-west1.gcp.commercetools.com/oauth/token',
     {
