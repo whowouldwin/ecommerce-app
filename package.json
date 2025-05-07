@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:functions": "tsc -p tsconfig.functions.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
@@ -23,12 +24,15 @@
     ]
   },
   "dependencies": {
+    "@netlify/node-cookies": "^0.1.0",
+    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@netlify/functions": "^3.1.5",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.10",
