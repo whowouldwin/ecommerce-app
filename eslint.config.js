@@ -1,10 +1,10 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import react from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
-import importPlugin from 'eslint-plugin-import'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import importPlugin from 'eslint-plugin-import';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
@@ -18,7 +18,7 @@ export default tseslint.config(
       globals: {
         ...globals.browser,
         ...globals.node,
-      }
+      },
     },
     plugins: {
       react,
@@ -40,12 +40,12 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'react/jsx-no-target-blank': ['warn', { enforceDynamicLinks: 'always' }],
-      'import/order': ['warn', { groups: ['builtin', 'external', 'internal']}],
+      'import/order': ['warn', { groups: ['builtin', 'external', 'internal'] }],
       'react/react-in-jsx-scope': 'off',
     },
   },
   {
     name: 'prettier-config',
     rules: prettier.rules,
-  }
-)
+  },
+);
