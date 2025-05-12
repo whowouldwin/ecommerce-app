@@ -2,12 +2,12 @@
 
 ## 📝 What’s this PR about?
 
-<!-- Provide a short and clear summary of your changes.  
+<!-- Provide a short and clear summary of your changes.
 Example: Added product card component with image and price display. -->
 
 ## 🔗 Related Issue(s)
 
-<!-- Link relevant issue(s) here. Example:  
+<!-- Link relevant issue(s) here. Example:
 Closes: RSS-ECOMM-1_05 -->
 
 ## 🔧 Type of Change
@@ -34,4 +34,3 @@ Please check the option that applies:
 ## 📸 Screenshots / Demo
 
 <!-- Add screenshots or screen recordings if your change includes UI updates. -->
-
