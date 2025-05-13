@@ -42,6 +42,8 @@ export default tseslint.config(
       'react/jsx-no-target-blank': ['warn', { enforceDynamicLinks: 'always' }],
       'import/order': ['warn', { groups: ['builtin', 'external', 'internal'] }],
       'react/react-in-jsx-scope': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
     },
   },
   {

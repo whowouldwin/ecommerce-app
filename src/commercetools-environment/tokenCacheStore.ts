@@ -1,0 +1,21 @@
+import { TokenCache, TokenStore } from '@commercetools/ts-client';
+import { saveDataInLS } from '../services';
+
+class TokenCacheStore implements TokenCache {
+  private cache: TokenStore = {
+    token: '',
+    refreshToken: '',
+    expirationTime: 0,
+  };
+
+  public get(): TokenStore {
+    return this.cache;
+  }
+
+  public set(newTokenCache: TokenStore) {
+    Object.assign(this.cache, newTokenCache);
+    saveDataInLS('session', this.get());
+  }
+}
+
+export const tokenCacheStore = new TokenCacheStore();
