@@ -1,6 +1,6 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 
-const MainPage = () => {
+export default function DeliveryPage() {
   return (
     <Box
       w="100%"
@@ -16,11 +16,9 @@ const MainPage = () => {
           color="primary"
           _dark={{ color: 'brand.300' }}
         >
-          Welcome to our flower shop website!
+          Delivery Info
         </Text>
       </Center>
     </Box>
   );
-};
-
-export default MainPage;
+}
