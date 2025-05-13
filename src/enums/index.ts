@@ -1,0 +1,6 @@
+export enum AuthFlowType {
+  'ANONYMOUS_FLOW',
+  'CREDENTIALS_FLOW',
+  'PASSWORD_FLOW',
+  'EXISTING_TOKEN_FLOW',
+}
