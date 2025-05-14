@@ -1,9 +1,6 @@
 import './test-form.css';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import {
-  loginUser,
-  logoutUser,
-} from '../../commercetools-environment/apiRequests.ts';
+import { login, logout } from '../../services';
 
 interface IFormState {
   login: string;
@@ -39,9 +36,9 @@ function TestForm() {
 
   const submitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loginUser({
-      loginUser: formState.login,
-      passwordUser: formState.password,
+    login({
+      email: formState.login,
+      password: formState.password,
     })
       .then((data) => {
         setFormState({
@@ -84,7 +81,7 @@ function TestForm() {
           setFormState({
             ...INITIAL_FORM_STATE,
           });
-          logoutUser();
+          logout();
         }}
         disabled={!formState.isUserLogin}
       >

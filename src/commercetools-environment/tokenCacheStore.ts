@@ -1,5 +1,6 @@
 import { TokenCache, TokenStore } from '@commercetools/ts-client';
 import { saveDataInLS } from '../services';
+import { LocalStorageKey } from '../enums';
 
 class TokenCacheStore implements TokenCache {
   private cache: TokenStore = {
@@ -14,7 +15,7 @@ class TokenCacheStore implements TokenCache {
 
   public set(newTokenCache: TokenStore) {
     Object.assign(this.cache, newTokenCache);
-    saveDataInLS('session', this.get());
+    saveDataInLS(LocalStorageKey.SESSION, this.get());
   }
 }
 
