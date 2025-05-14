@@ -1,23 +1,28 @@
 import './test-form.css';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { login, logout } from '../../services';
+import {
+  loginUser,
+  logoutUser,
+  selectUser,
+} from '../../features/user/userSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 
 interface IFormState {
   login: string;
   password: string;
   isFormReadyToSubmit: boolean;
-  isUserLogin: boolean;
 }
 
 const INITIAL_FORM_STATE: IFormState = {
   login: '',
   password: '',
   isFormReadyToSubmit: false,
-  isUserLogin: false,
 };
 
 function TestForm() {
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
 
   const inputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newFormState = {
@@ -31,36 +36,36 @@ function TestForm() {
   };
 
   function checkFormReadyToSubmit(stateForm: IFormState): boolean {
-    return !!formState.login && !!stateForm.password;
+    return !!stateForm.login && !!stateForm.password;
   }
 
   const submitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login({
-      email: formState.login,
-      password: formState.password,
-    })
-      .then((data) => {
-        setFormState({
-          ...formState,
-          isUserLogin: true,
-        });
-        console.log('data', data);
-      })
-      .catch((error) => console.log('loginError', error));
+    dispatch(
+      loginUser({ email: formState.login, password: formState.password }),
+    );
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setFormState(INITIAL_FORM_STATE);
   };
 
   return (
     <form className="test-form" onSubmit={submitForm}>
       {`formState.isFormReadyToSubmit ${formState.isFormReadyToSubmit}`}
       <h3 className="title">Login Form</h3>
-      <label>Login: </label>
+      <p>
+        Status:{' '}
+        {user.isAuthenticated ? `Logged in as ${user.email}` : 'Not logged in'}
+      </p>
+      <label>Login:</label>
       <input
         name="login"
         type="email"
         value={formState.login}
         onChange={inputChange}
-        disabled={formState.isUserLogin}
+        disabled={user.isAuthenticated}
       />
       <label>Password: </label>
       <input
@@ -68,22 +73,18 @@ function TestForm() {
         type="password"
         value={formState.password}
         onChange={inputChange}
-        disabled={formState.isUserLogin}
+        disabled={user.isAuthenticated}
       />
       <button
         type="submit"
-        disabled={!formState.isFormReadyToSubmit || formState.isUserLogin}
+        disabled={!formState.isFormReadyToSubmit || user.isAuthenticated}
       >
         login
       </button>
       <button
-        onClick={() => {
-          setFormState({
-            ...INITIAL_FORM_STATE,
-          });
-          logout();
-        }}
-        disabled={!formState.isUserLogin}
+        type="button"
+        onClick={handleLogout}
+        disabled={!user.isAuthenticated}
       >
         logout
       </button>
@@ -91,4 +92,4 @@ function TestForm() {
   );
 }
 
-export default TestForm;
+export { TestForm };

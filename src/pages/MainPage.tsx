@@ -5,7 +5,7 @@ import {
   Product,
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
-import TestForm from '../components/TestForm/TestForm.tsx';
+import { TestForm } from '../components/TestForm/TestForm.tsx';
 import { getME, getProducts } from '../services';
 
 const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {

@@ -8,3 +8,9 @@ export enum AuthFlowType {
 export enum LocalStorageKey {
   SESSION = 'session',
 }
+
+export enum Status {
+  Idle = 'idle',
+  Loading = 'loading',
+  Failed = 'failed',
+}
