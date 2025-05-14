@@ -1,21 +1,60 @@
-import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage.tsx';
-import MainPage from './pages/MainPage.tsx';
-import NotFoundPage from './pages/NotFoundPage.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import MainPage from './pages/MainPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import AboutPage from './pages/AboutPage'
+import DeliveryPage from './pages/DeliveryPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <Layout showAuthButtons>
+              <MainPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Layout showAuthButtons>
+              <AboutPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/delivery"
+          element={
+            <Layout showAuthButtons>
+              <DeliveryPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Layout headerButtonText="Back" headerButtonLink="/login">
+              <RegisterPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Layout>
+              <LoginPage />
+            </Layout>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/register" element={<RegisterPage />} />
       </Routes>
-    </BrowserRouter>
-  );
+    </Router>
+  )
 }
 
-export default App;
+export default App
