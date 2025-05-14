@@ -15,43 +15,48 @@ import {
   useDisclosure,
   VStack,
   useMediaQuery,
-} from '@chakra-ui/react'
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-import { ReactNode, useRef, useEffect } from 'react'
-import { useNavigate, useLocation, NavLink as RouterNavLink, matchPath } from 'react-router-dom'
-import ThemeToggle from './ThemeToggle'
-import { usePreviousLocation } from '../hooks/usePreviousLocation'
+} from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { ReactNode, useRef, useEffect } from 'react';
+import {
+  useNavigate,
+  useLocation,
+  NavLink as RouterNavLink,
+  matchPath,
+} from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
+import { usePreviousLocation } from '../hooks/usePreviousLocation';
 
 interface LayoutProps {
-  children: ReactNode
-  headerButtonText?: string
-  headerButtonLink?: string
-  showAuthButtons?: boolean
+  children: ReactNode;
+  headerButtonText?: string;
+  headerButtonLink?: string;
+  showAuthButtons?: boolean;
 }
 
 const Layout = ({ children, showAuthButtons }: LayoutProps) => {
-  const navigate = useNavigate()
-  const logoFilter = useColorModeValue('invert(0)', 'invert(1)')
-  const location = useLocation()
-  const activeColor = useColorModeValue('secondary', 'brand.200')
-  const inactiveColor = useColorModeValue('gray.600', 'gray.300')
-  const isLoggedIn = Boolean(localStorage.getItem('token'))
-  const { goBack } = usePreviousLocation()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef(null)
-  const [isNarrow] = useMediaQuery('(max-width: 489px)')
+  const navigate = useNavigate();
+  const logoFilter = useColorModeValue('invert(0)', 'invert(1)');
+  const location = useLocation();
+  const activeColor = useColorModeValue('secondary', 'brand.200');
+  const inactiveColor = useColorModeValue('gray.600', 'gray.300');
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
+  const { goBack } = usePreviousLocation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef(null);
+  const [isNarrow] = useMediaQuery('(max-width: 489px)');
 
   const navLinks = [
     { label: 'Home', to: '/' },
     { label: 'About Us', to: '/about' },
     { label: 'Delivery', to: '/delivery' },
-  ]
+  ];
 
   useEffect(() => {
     if (['/login', '/register'].includes(location.pathname)) {
-      onClose()
+      onClose();
     }
-  }, [location.pathname, onClose])
+  }, [location.pathname, onClose]);
 
   return (
     <Box minH="100vh">
@@ -81,7 +86,11 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                 }}
               />
             </Box>
-            <Box lineHeight="short" color="primary" _dark={{ color: 'brand.300' }}>
+            <Box
+              lineHeight="short"
+              color="primary"
+              _dark={{ color: 'brand.300' }}
+            >
               <Box fontWeight="bold">FLR</Box>
               <Box fontSize="sm" display={{ base: 'none', md: 'block' }}>
                 Product Customers Pr
@@ -98,8 +107,11 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
               display={{ base: 'none', md: 'flex' }} // скрывать на мобильных
             >
               {navLinks.map(({ label, to }) => {
-                const match = matchPath({ path: to, end: true }, location.pathname)
-                const isActive = Boolean(match)
+                const match = matchPath(
+                  { path: to, end: true },
+                  location.pathname,
+                );
+                const isActive = Boolean(match);
 
                 return (
                   <ChakraLink
@@ -113,7 +125,7 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                   >
                     {label}
                   </ChakraLink>
-                )
+                );
               })}
             </Flex>
           )}
@@ -128,8 +140,8 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                     variant="outline"
                     colorScheme="red"
                     onClick={() => {
-                      localStorage.removeItem('token')
-                      navigate('/login')
+                      localStorage.removeItem('token');
+                      navigate('/login');
                     }}
                   >
                     Log out
@@ -171,7 +183,12 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
       </Flex>
 
       {/* Drawer (бургер меню) */}
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader display="flex" justifyContent="flex-start" p={2}>
@@ -187,8 +204,11 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
             <VStack spacing={4} align="stretch" mt={4}>
               {/* Навигация */}
               {navLinks.map(({ label, to }) => {
-                const match = matchPath({ path: to, end: true }, location.pathname)
-                const isActive = Boolean(match)
+                const match = matchPath(
+                  { path: to, end: true },
+                  location.pathname,
+                );
+                const isActive = Boolean(match);
 
                 return (
                   <Button
@@ -199,13 +219,13 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                     color={isActive ? activeColor : inactiveColor}
                     _hover={{ textDecoration: 'none', color: activeColor }}
                     onClick={() => {
-                      navigate(to)
-                      onClose()
+                      navigate(to);
+                      onClose();
                     }}
                   >
                     {label}
                   </Button>
-                )
+                );
               })}
 
               <Box pt={4} borderTop="1px solid" borderColor="gray.200">
@@ -218,9 +238,9 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                         colorScheme="red"
                         w="full"
                         onClick={() => {
-                          localStorage.removeItem('token')
-                          navigate('/login')
-                          onClose()
+                          localStorage.removeItem('token');
+                          navigate('/login');
+                          onClose();
                         }}
                       >
                         Log out
@@ -233,8 +253,8 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                             colorScheme="brand"
                             w="full"
                             onClick={() => {
-                              navigate('/login')
-                              onClose()
+                              navigate('/login');
+                              onClose();
                             }}
                           >
                             Sign In
@@ -246,8 +266,8 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
                             onClick={() => {
                               navigate('/register', {
                                 state: { from: location.pathname },
-                              })
-                              onClose()
+                              });
+                              onClose();
                             }}
                           >
                             Sign Up
@@ -267,7 +287,7 @@ const Layout = ({ children, showAuthButtons }: LayoutProps) => {
         {children}
       </Container>
     </Box>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

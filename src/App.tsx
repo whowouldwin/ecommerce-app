@@ -1,11 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import MainPage from './pages/MainPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import AboutPage from './pages/AboutPage'
-import DeliveryPage from './pages/DeliveryPage'
-import NotFoundPage from './pages/NotFoundPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
+import DeliveryPage from './pages/DeliveryPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -54,7 +54,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

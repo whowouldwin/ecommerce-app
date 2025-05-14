@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -10,36 +10,36 @@ import {
   VStack,
   useToast,
   useColorModeValue,
-} from '@chakra-ui/react'
-import { useNavigate, Link, useLocation } from 'react-router-dom'
-import CustomToast from '../components/CustomToast'
+} from '@chakra-ui/react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import CustomToast from '../components/CustomToast';
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate()
-  const toast = useToast()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const toast = useToast();
+  const location = useLocation();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError('');
 
     if (!email || !password) {
-      setError('Please fill in all fields!')
-      return
+      setError('Please fill in all fields!');
+      return;
     }
 
     if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError('Please enter correct email!')
-      return
+      setError('Please enter correct email!');
+      return;
     }
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long!')
-      return
+      setError('Password must be at least 8 characters long!');
+      return;
     }
 
     try {
@@ -47,28 +47,32 @@ const LoginPage: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      if (!response.ok) throw new Error('Invalid email or password!')
-      const data = await response.json()
-      localStorage.setItem('token', data.token)
+      if (!response.ok) throw new Error('Invalid email or password!');
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
       toast({
         duration: 3000,
         isClosable: true,
         position: 'top-left',
         render: ({ onClose }) => (
-          <CustomToast message="Logged in successfully!" onClose={onClose} status="success" />
+          <CustomToast
+            message="Logged in successfully!"
+            onClose={onClose}
+            status="success"
+          />
         ),
-      })
-      navigate('/')
+      });
+      navigate('/');
     } catch (err) {
       if (err instanceof Error) {
-        setError(`Error: ${err.message}`)
+        setError(`Error: ${err.message}`);
       } else {
-        setError('Unknown error occurred. Try again!')
+        setError('Unknown error occurred. Try again!');
       }
     }
-  }
+  };
 
   return (
     <Box
@@ -83,18 +87,32 @@ const LoginPage: React.FC = () => {
       color={useColorModeValue('gray.800', 'white')}
     >
       <VStack as="form" spacing={5} onSubmit={handleSubmit}>
-        <Heading color="primary.300" _dark={{ color: 'brand.300' }} as="h2" size="lg" mb={4}>
+        <Heading
+          color="primary.300"
+          _dark={{ color: 'brand.300' }}
+          as="h2"
+          size="lg"
+          mb={4}
+        >
           Sign In to FLR
         </Heading>
 
         <FormControl isRequired>
           <FormLabel>Email</FormLabel>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </FormControl>
 
         <FormControl isRequired>
           <FormLabel>Password</FormLabel>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </FormControl>
 
         {error && (
@@ -122,7 +140,7 @@ const LoginPage: React.FC = () => {
         </Text>
       </VStack>
     </Box>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -1,10 +1,10 @@
-import { extendTheme, ThemeConfig, StyleFunctionProps } from '@chakra-ui/react'
-import { mode } from '@chakra-ui/theme-tools'
+import { extendTheme, ThemeConfig, StyleFunctionProps } from '@chakra-ui/react';
+import { mode } from '@chakra-ui/theme-tools';
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
   useSystemColorMode: false,
-}
+};
 
 const theme = extendTheme({
   config,
@@ -37,7 +37,7 @@ const theme = extendTheme({
       },
       body: {
         minHeight: '100vh',
-        bg: mode('white', 'gray.900')(props), 
+        bg: mode('white', 'gray.900')(props),
         color: mode('gray.800', 'gray.100')(props),
       },
       '#root': {
@@ -66,6 +66,6 @@ const theme = extendTheme({
       },
     },
   },
-})
+});
 
-export default theme
+export default theme;
