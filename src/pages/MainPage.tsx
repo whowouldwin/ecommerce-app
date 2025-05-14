@@ -5,19 +5,10 @@ import {
   Product,
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
-import {
-  getME,
-  getProducts,
-} from '../commercetools-environment/apiRequests.ts';
 import TestForm from '../components/TestForm/TestForm.tsx';
+import { getME, getProducts } from '../services';
 
-const INITIAL_DATA_PRODUCTS: {
-  limit: number;
-  offset: number;
-  count: number;
-  total?: number;
-  results: Product[];
-} = {
+const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   limit: 0,
   offset: 0,
   count: 0,
@@ -30,11 +21,6 @@ export default function MainPage() {
     getProducts()
       .then((data: ClientResponse<ProductPagedQueryResponse>) => {
         setDataProducts({ ...data.body });
-        console.log(
-          'Firs-data-------------------',
-          data,
-          'getProducts-------------------',
-        );
       })
       .catch(console.error);
   }, []);

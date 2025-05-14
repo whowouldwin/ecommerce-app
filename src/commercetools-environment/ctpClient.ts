@@ -1,12 +1,12 @@
 import {
   type AuthMiddlewareOptions,
-  ClientBuilder,
-  ExistingTokenMiddlewareOptions,
   type HttpMiddlewareOptions,
+  ClientBuilder,
   LoggerMiddlewareOptions,
   MiddlewareResponse,
   PasswordAuthMiddlewareOptions,
-  // RefreshAuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
+  UserAuthOptions,
 } from '@commercetools/ts-client';
 import { getAnonymousId } from '../utils/helpers.ts';
 import { tokenCacheStore } from './tokenCacheStore.ts';
@@ -23,7 +23,7 @@ const loggerMiddlewareOptions: LoggerMiddlewareOptions = {
     console.log('Response is: ', response);
   },
 };
-// TODO  Configure httpMiddlewareOptions
+
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: apiHost,
   httpClient: fetch,
@@ -39,39 +39,24 @@ const defaultMiddlewareOptions: AuthMiddlewareOptions = {
   httpClient: fetch,
 };
 
-// TODO getCtpClientWithExistingTokenFlow поменять на refresh
-export function getCtpClientWithExistingTokenFlow(existingAccessToken: string) {
-  const existingTokenMiddlewareOptions: ExistingTokenMiddlewareOptions = {
-    force: true,
+export function getCtpClientWithRefreshTokenFlow(refreshToken: string) {
+  const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
+    ...defaultMiddlewareOptions,
+    credentials: {
+      ...defaultMiddlewareOptions.credentials,
+    },
+    refreshToken: refreshToken,
+    tokenCache: tokenCacheStore,
   };
 
   return new ClientBuilder()
-    .withExistingTokenFlow(existingAccessToken, existingTokenMiddlewareOptions)
+    .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
     .withHttpMiddleware(httpMiddlewareOptions)
     .withLoggerMiddleware()
     .build();
 }
-//
-// export function getCtpClientWithRefreshTokenFlow(refreshToken: string) {
-//   const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
-//     ...defaultMiddlewareOptions,
-//     credentials: {
-//       ...defaultMiddlewareOptions.credentials
-//     },
-//     refreshToken: refreshToken,
-//     tokenCache: tokenCacheStore,
-//   };
-//
-//   return new ClientBuilder()
-//     .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
-//     .withHttpMiddleware(httpMiddlewareOptions)
-//     .withLoggerMiddleware()
-//     .build();
-// }
 
 export function getCtpClientCredentialsFlow() {
-  // const clientCredentialsAuthMiddlewareOptions: AuthMiddlewareOptions = defaultMiddlewareOptions;
-
   return new ClientBuilder()
     .withClientCredentialsFlow(defaultMiddlewareOptions)
     .withHttpMiddleware(httpMiddlewareOptions)
@@ -96,11 +81,7 @@ export function getCtpClientAnonymousFlow() {
     .build();
 }
 
-export function getCtpClientPasswordFlow(currentUser: {
-  // TODO currentUser in interface
-  username: string;
-  password: string;
-}) {
+export function getCtpClientPasswordFlow(currentUser: UserAuthOptions) {
   const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
     ...defaultMiddlewareOptions,
     credentials: {

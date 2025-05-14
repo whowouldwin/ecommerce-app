@@ -2,5 +2,9 @@ export enum AuthFlowType {
   'ANONYMOUS_FLOW',
   'CREDENTIALS_FLOW',
   'PASSWORD_FLOW',
-  'EXISTING_TOKEN_FLOW',
+  'REFRESH_TOKEN_FLOW',
+}
+
+export enum LocalStorageKey {
+  SESSION = 'session',
 }

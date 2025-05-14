@@ -1,24 +1,26 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { Client } from '@commercetools/ts-client';
+import {
+  ByProjectKeyRequestBuilder,
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
+import { Client, TokenStore, UserAuthOptions } from '@commercetools/ts-client';
 import {
   getCtpClientAnonymousFlow,
   getCtpClientCredentialsFlow,
   getCtpClientPasswordFlow,
-  getCtpClientWithExistingTokenFlow,
+  getCtpClientWithRefreshTokenFlow,
   projectKey,
 } from './ctpClient.ts';
 import { getDataFromLS } from '../services';
-import { AuthFlowType } from '../enums';
+import { AuthFlowType, LocalStorageKey } from '../enums';
 
 class ApiClient {
-  private apiRoot;
+  private apiRoot: ByProjectKeyRequestBuilder;
   private ctpClient: Client;
 
   constructor() {
-    // TODO заменить cookie
     this.ctpClient = this.makeCtpClient(
-      getDataFromLS('session')
-        ? AuthFlowType.EXISTING_TOKEN_FLOW
+      getDataFromLS(LocalStorageKey.SESSION)
+        ? AuthFlowType.REFRESH_TOKEN_FLOW
         : AuthFlowType.CREDENTIALS_FLOW,
     );
 
@@ -27,18 +29,11 @@ class ApiClient {
     );
   }
 
-  getApiRoot() {
+  getApiRoot(): ByProjectKeyRequestBuilder {
     return this.apiRoot;
   }
 
-  changeApiRoot(
-    authFlowType: AuthFlowType,
-    // TODO type
-    userCredentials?: {
-      username: string;
-      password: string;
-    },
-  ) {
+  changeApiRoot(authFlowType: AuthFlowType, userCredentials?: UserAuthOptions) {
     this.ctpClient = this.makeCtpClient(authFlowType, userCredentials);
     this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey(
       { projectKey: projectKey },
@@ -47,11 +42,7 @@ class ApiClient {
 
   makeCtpClient(
     authFlowType: AuthFlowType,
-    // TODO type
-    userCredentials?: {
-      username: string;
-      password: string;
-    },
+    userCredentials?: UserAuthOptions,
   ): Client {
     switch (authFlowType) {
       case AuthFlowType.ANONYMOUS_FLOW: {
@@ -68,18 +59,17 @@ class ApiClient {
       case AuthFlowType.CREDENTIALS_FLOW: {
         return getCtpClientCredentialsFlow();
       }
-      case AuthFlowType.EXISTING_TOKEN_FLOW: {
-        // TODO cookie
-        const sessionData = getDataFromLS('session');
-        if (sessionData !== null) {
-          return getCtpClientWithExistingTokenFlow(
-            `Bearer ${sessionData.token}`,
-          ); // TODO replace 'here must be access token'
+      case AuthFlowType.REFRESH_TOKEN_FLOW: {
+        const sessionData: TokenStore | null = getDataFromLS(
+          LocalStorageKey.SESSION,
+        );
+        if (sessionData !== null && sessionData.refreshToken) {
+          return getCtpClientWithRefreshTokenFlow(sessionData.refreshToken);
         }
         return this.makeCtpClient(AuthFlowType.CREDENTIALS_FLOW);
       }
     }
   }
 }
-//
+
 export const apiClient = new ApiClient();
