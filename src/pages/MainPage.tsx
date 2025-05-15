@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   ClientResponse,
@@ -97,16 +97,6 @@ export default function MainPage() {
         Status:{' '}
         {user.isAuthenticated ? `Logged in as ${user.email}` : 'Not logged in'}
       </p>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-        </ul>
-      </nav>
     </div>
   );
 }

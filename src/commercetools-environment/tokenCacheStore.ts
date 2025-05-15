@@ -1,6 +1,6 @@
 import { TokenCache, TokenStore } from '@commercetools/ts-client';
 import { saveDataInLS } from '../services';
-import { LocalStorageKey } from '../enums';
+import { LocalStorageKey } from '../enums/appEnums.ts';
 
 class TokenCacheStore implements TokenCache {
   private cache: TokenStore = {

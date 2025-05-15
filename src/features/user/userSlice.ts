@@ -2,18 +2,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { login, logout } from '../../services';
 import { IUserAuthData } from '../../types';
-import { Status } from '../../enums';
+import { RequestStatus } from '../../enums/appEnums.ts';
 
 interface UserState {
   isAuthenticated: boolean;
   email: string | null;
-  status: Status;
+  status: RequestStatus;
 }
 
 const initialState: UserState = {
   isAuthenticated: false,
   email: null,
-  status: Status.Idle,
+  status: RequestStatus.IDLE,
 };
 
 export const loginUser = createAsyncThunk(
@@ -52,22 +52,22 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
-        state.status = Status.Loading;
+        state.status = RequestStatus.LOADING;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.status = Status.Idle;
+        state.status = RequestStatus.IDLE;
         state.isAuthenticated = true;
         state.email = action.payload.email;
       })
       .addCase(loginUser.rejected, (state) => {
-        state.status = Status.Failed;
+        state.status = RequestStatus.FAILED;
         state.isAuthenticated = false;
         state.email = null;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.email = null;
-        state.status = Status.Idle;
+        state.status = RequestStatus.IDLE;
       });
   },
 });
