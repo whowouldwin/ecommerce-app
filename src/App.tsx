@@ -38,7 +38,7 @@ function App() {
         <Route
           path="/register"
           element={
-            <Layout headerButtonText="Back" headerButtonLink="/login">
+            <Layout>
               <RegisterPage />
             </Layout>
           }
