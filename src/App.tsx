@@ -18,7 +18,6 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
-      );
     </Provider>
   );
 }

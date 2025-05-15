@@ -48,10 +48,6 @@ export const userSlice = createSlice({
       state.isAuthenticated = true;
       state.email = action.payload.email;
     },
-    loginOut: (state) => {
-      state.isAuthenticated = false;
-      state.email = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -71,10 +67,11 @@ export const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.email = null;
+        state.status = Status.Idle;
       });
   },
 });
 
 export const userReducer = userSlice.reducer;
-export const { loginIn, loginOut } = userSlice.actions;
+export const { loginIn } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user;

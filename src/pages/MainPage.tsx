@@ -1,12 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   ClientResponse,
   Product,
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
-import { TestForm } from '../components/TestForm/TestForm.tsx';
 import { getME, getProducts } from '../services';
+import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
+import { logoutUser, selectUser } from '../features/user/userSlice.ts';
 
 const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   limit: 0,
@@ -16,6 +17,17 @@ const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
 };
 
 export default function MainPage() {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => navigate('/'))
+      .catch((e) => console.error('Logout failed:', e));
+  };
+
   const [dataProducts, setDataProducts] = useState(INITIAL_DATA_PRODUCTS);
   useEffect(() => {
     getProducts()
@@ -57,6 +69,7 @@ export default function MainPage() {
       <div key="products-list-key" className="products">
         <h3>Product List</h3>
         <p>product quantity: {productQuantity}</p>
+        {user.isAuthenticated && <button onClick={handleLogout}>Logout</button>}
         <ul className="products-list">{productsList.length && productsList}</ul>
       </div>
     );
@@ -76,12 +89,14 @@ export default function MainPage() {
         >
           get me
         </button>
-        <TestForm />
       </div>
       {getProductList(dataProducts)}
 
       <h1>Main Page</h1>
-
+      <p>
+        Status:{' '}
+        {user.isAuthenticated ? `Logged in as ${user.email}` : 'Not logged in'}
+      </p>
       <nav>
         <ul>
           <li>

@@ -25,19 +25,6 @@ export const login = ({ email, password }: IUserAuthData) => {
 
 export const logout = () => {
   apiClient.changeApiRoot(AuthFlowType.CREDENTIALS_FLOW);
-
-  return apiClient
-    .getApiRoot()
-    .me()
-    .get()
-    .execute()
-    .then((response) => {
-      console.log('logoutUser-response', response);
-    })
-    .catch((error) => {
-      if (error.status === 403) {
-        removeDataFromLS(LocalStorageKey.SESSION);
-        // TODO: redirect to main page
-      }
-    });
+  removeDataFromLS(LocalStorageKey.SESSION);
+  return Promise.resolve();
 };
