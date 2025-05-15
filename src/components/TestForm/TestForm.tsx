@@ -1,10 +1,6 @@
 import './test-form.css';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import {
-  loginUser,
-  logoutUser,
-  selectUser,
-} from '../../features/user/userSlice.ts';
+import { loginUser, selectUser } from '../../features/user/userSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 
 interface IFormState {
@@ -46,15 +42,11 @@ function TestForm() {
     );
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setFormState(INITIAL_FORM_STATE);
-  };
-
   return (
     <form className="test-form" onSubmit={submitForm}>
       {`formState.isFormReadyToSubmit ${formState.isFormReadyToSubmit}`}
       <h3 className="title">Login Form</h3>
+      <p>{`formState.isFormReadyToSubmit ${formState.isFormReadyToSubmit}`}</p>
       <p>
         Status:{' '}
         {user.isAuthenticated ? `Logged in as ${user.email}` : 'Not logged in'}
@@ -80,13 +72,6 @@ function TestForm() {
         disabled={!formState.isFormReadyToSubmit || user.isAuthenticated}
       >
         login
-      </button>
-      <button
-        type="button"
-        onClick={handleLogout}
-        disabled={!user.isAuthenticated}
-      >
-        logout
       </button>
     </form>
   );
