@@ -9,8 +9,8 @@ export enum LocalStorageKey {
   SESSION = 'session',
 }
 
-export enum Status {
-  Idle = 'idle',
-  Loading = 'loading',
-  Failed = 'failed',
+export enum RequestStatus {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  FAILED = 'failed',
 }

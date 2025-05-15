@@ -6,11 +6,13 @@ import MainPage from './pages/MainPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
 import { index } from './store';
+import { Header } from './components/Header/Header.tsx';
 
 function App() {
   return (
     <Provider store={index}>
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />

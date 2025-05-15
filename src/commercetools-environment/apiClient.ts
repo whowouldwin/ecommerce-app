@@ -11,7 +11,7 @@ import {
   projectKey,
 } from './ctpClient.ts';
 import { getDataFromLS } from '../services';
-import { AuthFlowType, LocalStorageKey } from '../enums';
+import { AuthFlowType, LocalStorageKey } from '../enums/appEnums.ts';
 
 class ApiClient {
   private apiRoot: ByProjectKeyRequestBuilder;

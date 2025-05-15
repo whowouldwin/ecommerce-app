@@ -1,5 +1,5 @@
 import { apiClient } from '../commercetools-environment/apiClient.ts';
-import { AuthFlowType, LocalStorageKey } from '../enums';
+import { AuthFlowType, LocalStorageKey } from '../enums/appEnums.ts';
 import { removeDataFromLS } from './local-storage.service.ts';
 import { IUserAuthData } from '../types';
 
