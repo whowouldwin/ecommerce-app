@@ -36,14 +36,19 @@ const RegisterPage: React.FC = () => {
 
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) return 'Invalid email!';
-    if (form.password.length < 8)
-      return 'Password must be at least 8 characters long!';
-    if (!form.firstName || !form.lastName)
-      return 'Enter your first and last name!';
-    if (form.password !== form.confirmPassword)
-      return 'Passwords do not match!';
-    return '';
+
+    switch (true) {
+      case !emailRegex.test(form.email):
+        return 'Invalid email!';
+      case form.password.length < 8:
+        return 'Password must be at least 8 characters long!';
+      case !form.firstName || !form.lastName:
+        return 'Enter your first and last name!';
+      case form.password !== form.confirmPassword:
+        return 'Passwords do not match!';
+      default:
+        return '';
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
