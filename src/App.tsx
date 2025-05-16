@@ -1,21 +1,27 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import LoginPage from './pages/LoginPage.tsx';
 import MainPage from './pages/MainPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
+import { store } from './store/store.ts';
+import { Header } from './components/Header/Header.tsx';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
-export default App;
+export { App };
