@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
+import { RootState } from '../../store/store.ts';
 import { login, logout } from '../../services';
 import { IUserAuthData } from '../../types';
 import { RequestStatus } from '../../enums/appEnums.ts';
