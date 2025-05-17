@@ -51,7 +51,7 @@ const AuthButtons = ({
   const buttons = (
     <>
       <Button
-        variant="outline"
+        variant={location.pathname === '/login' ? 'solid' : 'outline'}
         colorScheme="brand"
         w={isVertical ? 'full' : undefined}
         onClick={onLogin}
@@ -59,7 +59,7 @@ const AuthButtons = ({
         Sign In
       </Button>
       <Button
-        variant="solid"
+        variant={location.pathname === '/register' ? 'solid' : 'outline'}
         colorScheme="brand"
         w={isVertical ? 'full' : undefined}
         onClick={onRegister}

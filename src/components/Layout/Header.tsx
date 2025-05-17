@@ -98,7 +98,9 @@ const Header = () => {
                       as={RouterLink}
                       to="/login"
                       colorScheme="teal"
-                      variant="solid"
+                      variant={
+                        location.pathname === '/login' ? 'solid' : 'outline'
+                      }
                       size="sm"
                     >
                       Login
@@ -107,7 +109,9 @@ const Header = () => {
                       as={RouterLink}
                       to="/register"
                       colorScheme="teal"
-                      variant="outline"
+                      variant={
+                        location.pathname === '/register' ? 'solid' : 'outline'
+                      }
                       size="sm"
                     >
                       Register
