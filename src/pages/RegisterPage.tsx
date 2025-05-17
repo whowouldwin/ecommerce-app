@@ -12,14 +12,19 @@ import {
   useToast,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { FormFields } from '../types/types';
 import CustomToast from '../components/CustomToast';
+import { useAppDispatch } from '../store/hooks';
+import { loginUser } from '../features/user/userSlice';
+import { apiClient } from '../commercetools-environment/apiClient';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   const [form, setForm] = useState<FormFields>({
@@ -63,29 +68,18 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      const registerRes = await fetch('http://localhost:4000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-          firstName: form.firstName,
-          lastName: form.lastName,
-        }),
+      await apiClient.registerCustomer({
+        email: form.email,
+        password: form.password,
+        firstName: form.firstName,
+        lastName: form.lastName,
       });
 
-      if (!registerRes.ok) throw new Error('Registration error!');
-
-      const loginRes = await fetch('http://localhost:4000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, password: form.password }),
-      });
-
-      if (!loginRes.ok) throw new Error('Login error!');
-
-      const data = await loginRes.json();
-      localStorage.setItem('token', data.token);
+      await dispatch(loginUser({ email: form.email, password: form.password }))
+        .unwrap()
+        .catch(() => {
+          throw new Error('Login error!');
+        });
 
       toast({
         description: 'You are now logged in.',
@@ -101,13 +95,13 @@ const RegisterPage: React.FC = () => {
         ),
       });
 
-      navigate('/');
+      navigate(location.state?.from || '/');
     } catch (err) {
-      if (err instanceof Error) {
-        setError(`Error: ${err.message}`);
-      } else {
-        setError('Unknown error occurred. Try again!');
-      }
+      setError(
+        err instanceof Error
+          ? `Error: ${err.message}`
+          : 'Unknown error occurred. Try again!',
+      );
     }
   };
 
