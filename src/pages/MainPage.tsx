@@ -1,24 +1,146 @@
-import { Box, Center, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Image,
+  Text,
+  VStack,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import {
+  ClientResponse,
+  Product,
+  ProductPagedQueryResponse,
+} from '@commercetools/platform-sdk';
+import { getME, getProducts } from '../services';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { logoutUser, selectUser } from '../features/user/userSlice';
+
+const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
+  limit: 0,
+  offset: 0,
+  count: 0,
+  results: [],
+};
 
 const MainPage = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
+
+  const bgProductCard = useColorModeValue('gray.50', 'gray.700'); // ✅ Хук — на верхнем уровне
+
+  const [dataProducts, setDataProducts] = useState(INITIAL_DATA_PRODUCTS);
+
+  useEffect(() => {
+    getProducts()
+      .then((data: ClientResponse<ProductPagedQueryResponse>) => {
+        setDataProducts({ ...data.body });
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => navigate('/'))
+      .catch((e) => console.error('Logout failed:', e));
+  };
+
+  const getProductList = (
+    productData: ProductPagedQueryResponse,
+    cardBg: string,
+  ) => {
+    return (
+      <VStack spacing={6} align="stretch" mt={10}>
+        <Heading size="md">Products ({productData.count})</Heading>
+
+        {user.isAuthenticated && (
+          <Button colorScheme="red" size="sm" onClick={handleLogout}>
+            Logout
+          </Button>
+        )}
+
+        {productData.results.map((product: Product) => {
+          const productInfo = product.masterData.current;
+          const productImage = productInfo.masterVariant.images?.[0];
+          const productPrice = productInfo.masterVariant.prices?.[0];
+
+          return (
+            <Box
+              key={product.id}
+              p={5}
+              shadow="md"
+              borderWidth="1px"
+              borderRadius="lg"
+              bg={cardBg} // ✅ использует переменную, а не хук внутри
+            >
+              <Heading fontSize="xl">{productInfo.name['en-US']}</Heading>
+
+              {productImage && (
+                <Image
+                  src={productImage.url}
+                  alt="Product"
+                  boxSize="200px"
+                  objectFit="cover"
+                  mt={2}
+                />
+              )}
+
+              <Text mt={2}>
+                {productInfo.description?.['en-US'] || 'No description'}
+              </Text>
+
+              {productPrice && (
+                <Text mt={2} fontWeight="bold">
+                  Price:{' '}
+                  {(
+                    productPrice.value.centAmount /
+                    10 ** productPrice.value.fractionDigits
+                  ).toFixed(productPrice.value.fractionDigits)}{' '}
+                  {productPrice.value.currencyCode}
+                </Text>
+              )}
+            </Box>
+          );
+        })}
+      </VStack>
+    );
+  };
+
   return (
-    <Box
-      w="100%"
-      minH="70vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Box p={6} maxW="7xl" mx="auto">
       <Center>
-        <Text
-          fontSize="2xl"
-          fontWeight="bold"
-          color="primary"
-          _dark={{ color: 'brand.300' }}
-        >
-          Welcome to our flower shop website!
-        </Text>
+        <VStack spacing={4}>
+          <Heading fontSize="3xl" color="primary.500">
+            Welcome to our flower shop!
+          </Heading>
+
+          <Button
+            onClick={() =>
+              getME()
+                .then((data) => console.log('getMe', data))
+                .catch((error) => console.log('getMeError', error))
+            }
+            colorScheme="teal"
+            size="sm"
+          >
+            Get Me
+          </Button>
+
+          <Text fontSize="md">
+            Status:{' '}
+            {user.isAuthenticated
+              ? `Logged in as ${user.email}`
+              : 'Not logged in'}
+          </Text>
+        </VStack>
       </Center>
+
+      {getProductList(dataProducts, bgProductCard)}
     </Box>
   );
 };
