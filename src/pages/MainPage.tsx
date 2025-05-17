@@ -8,7 +8,6 @@ import {
   VStack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   ClientResponse,
@@ -16,8 +15,8 @@ import {
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { getME, getProducts } from '../services';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { logoutUser, selectUser } from '../features/user/userSlice';
+import { useAppSelector } from '../store/hooks';
+import { selectUser } from '../features/user/userSlice';
 
 const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   limit: 0,
@@ -27,10 +26,7 @@ const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
 };
 
 const MainPage = () => {
-  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const navigate = useNavigate();
-
   const bgProductCard = useColorModeValue('gray.50', 'gray.700'); // ✅ Хук — на верхнем уровне
 
   const [dataProducts, setDataProducts] = useState(INITIAL_DATA_PRODUCTS);
@@ -43,13 +39,6 @@ const MainPage = () => {
       .catch(console.error);
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logoutUser())
-      .unwrap()
-      .then(() => navigate('/'))
-      .catch((e) => console.error('Logout failed:', e));
-  };
-
   const getProductList = (
     productData: ProductPagedQueryResponse,
     cardBg: string,
@@ -57,12 +46,6 @@ const MainPage = () => {
     return (
       <VStack spacing={6} align="stretch" mt={10}>
         <Heading size="md">Products ({productData.count})</Heading>
-
-        {user.isAuthenticated && (
-          <Button colorScheme="red" size="sm" onClick={handleLogout}>
-            Logout
-          </Button>
-        )}
 
         {productData.results.map((product: Product) => {
           const productInfo = product.masterData.current;
