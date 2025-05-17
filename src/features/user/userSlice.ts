@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store.ts';
 import { login, logout } from '../../services';
 import { IUserAuthData } from '../../types';
-import { RequestStatus } from '../../enums/appEnums.ts';
+import { RequestStatus, LocalStorageKey } from '../../enums/appEnums.ts';
+import { getDataFromLS } from '../../services';
 
 interface UserState {
   isAuthenticated: boolean;
@@ -10,8 +11,22 @@ interface UserState {
   status: RequestStatus;
 }
 
-const initialState: UserState = {
-  isAuthenticated: false,
+const sessionData = getDataFromLS(LocalStorageKey.SESSION);
+const isAuthenticated = Boolean(sessionData?.token);
+
+const savedUserState = localStorage.getItem('userState');
+let parsedUserState: UserState | null = null;
+
+if (savedUserState) {
+  try {
+    parsedUserState = JSON.parse(savedUserState);
+  } catch (e) {
+    console.error('Failed to parse user state from localStorage', e);
+  }
+}
+
+const initialState: UserState = parsedUserState || {
+  isAuthenticated,
   email: null,
   status: RequestStatus.IDLE,
 };
@@ -68,6 +83,7 @@ export const userSlice = createSlice({
         state.isAuthenticated = false;
         state.email = null;
         state.status = RequestStatus.IDLE;
+        localStorage.removeItem('userState');
       });
   },
 });
