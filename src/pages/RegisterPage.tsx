@@ -13,6 +13,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link as ChakraLink } from '@chakra-ui/react';
 import { FormFields } from '../types/types';
 import CustomToast from '../components/CustomToast';
 
@@ -189,6 +191,12 @@ const RegisterPage: React.FC = () => {
         <Button colorScheme="blue" type="submit" width="full">
           Sign Up
         </Button>
+        <Text fontSize="sm">
+          Already have an account?{' '}
+          <ChakraLink as={RouterLink} to="/login" color="blue.500">
+            Login
+          </ChakraLink>
+        </Text>
       </VStack>
     </Box>
   );
