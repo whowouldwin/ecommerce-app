@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,12 +12,25 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
+import { useAppSelector } from '../store/hooks';
+import { selectUser, loginUser } from '../features/user/userSlice';
 import CustomToast from '../components/CustomToast';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const toast = useToast();
   const location = useLocation();
+  const toast = useToast();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const user = useAppSelector(selectUser);
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      navigate('/');
+    }
+  }, [navigate, user]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,28 +56,24 @@ const LoginPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const resultAction = await dispatch(loginUser({ email, password }));
 
-      if (!response.ok) throw new Error('Invalid email or password!');
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
-      toast({
-        duration: 3000,
-        isClosable: true,
-        position: 'top-left',
-        render: ({ onClose }) => (
-          <CustomToast
-            message="Logged in successfully!"
-            onClose={onClose}
-            status="success"
-          />
-        ),
-      });
-      navigate('/');
+      if (loginUser.fulfilled.match(resultAction)) {
+        toast({
+          duration: 3000,
+          isClosable: true,
+          position: 'top-left',
+          render: ({ onClose }) => (
+            <CustomToast
+              message="Logged in successfully!"
+              onClose={onClose}
+              status="success"
+            />
+          ),
+        });
+      } else {
+        setError('Login failed: Invalid credentials');
+      }
     } catch (err) {
       if (err instanceof Error) {
         setError(`Error: ${err.message}`);
