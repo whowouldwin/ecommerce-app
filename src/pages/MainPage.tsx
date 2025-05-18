@@ -1,4 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Image,
+  Text,
+  VStack,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
   ClientResponse,
@@ -6,8 +15,8 @@ import {
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { getME, getProducts } from '../services';
-import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
-import { logoutUser, selectUser } from '../features/user/userSlice.ts';
+import { useAppSelector } from '../store/hooks';
+import { selectUser } from '../features/user/userSlice';
 
 const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   limit: 0,
@@ -16,19 +25,12 @@ const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   results: [],
 };
 
-export default function MainPage() {
-  const dispatch = useAppDispatch();
+const MainPage = () => {
   const user = useAppSelector(selectUser);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    dispatch(logoutUser())
-      .unwrap()
-      .then(() => navigate('/'))
-      .catch((e) => console.error('Logout failed:', e));
-  };
+  const bgProductCard = useColorModeValue('gray.50', 'gray.700'); // ✅ Хук — на верхнем уровне
 
   const [dataProducts, setDataProducts] = useState(INITIAL_DATA_PRODUCTS);
+
   useEffect(() => {
     getProducts()
       .then((data: ClientResponse<ProductPagedQueryResponse>) => {
@@ -37,66 +39,93 @@ export default function MainPage() {
       .catch(console.error);
   }, []);
 
-  const getProductList = (productData: ProductPagedQueryResponse) => {
-    const productQuantity: string = String(productData.count);
-    const productsList = productData.results.map((product: Product) => {
-      const productInfo = product.masterData.current;
-      const productImage =
-        productInfo.masterVariant.images && productInfo.masterVariant.images[0];
-      const productPrice =
-        productInfo.masterVariant.prices && productInfo.masterVariant.prices[0];
-      return (
-        <li className="product-card" key={product.id}>
-          <h4>{productInfo.name['en - US']}</h4>
-          {productImage && <img src={productImage.url} alt="card-image"></img>}
-          <p>Product description: </p>
-          <p>{productInfo.description && productInfo.description['en-US']}</p>
-          {productPrice && (
-            <p>
-              {'Price: '}
-              {(
-                productPrice.value.centAmount /
-                10 ** productPrice.value.fractionDigits
-              ).toFixed(productPrice.value.fractionDigits)}{' '}
-              {productPrice.value.currencyCode}
-            </p>
-          )}
-        </li>
-      );
-    });
-
+  const getProductList = (
+    productData: ProductPagedQueryResponse,
+    cardBg: string,
+  ) => {
     return (
-      <div key="products-list-key" className="products">
-        <h3>Product List</h3>
-        <p>product quantity: {productQuantity}</p>
-        {user.isAuthenticated && <button onClick={handleLogout}>Logout</button>}
-        <ul className="products-list">{productsList.length && productsList}</ul>
-      </div>
+      <VStack spacing={6} align="stretch" mt={10}>
+        <Heading size="md">Products ({productData.count})</Heading>
+
+        {productData.results.map((product: Product) => {
+          const productInfo = product.masterData.current;
+          const productImage = productInfo.masterVariant.images?.[0];
+          const productPrice = productInfo.masterVariant.prices?.[0];
+
+          return (
+            <Box
+              key={product.id}
+              p={5}
+              shadow="md"
+              borderWidth="1px"
+              borderRadius="lg"
+              bg={cardBg} // ✅ использует переменную, а не хук внутри
+            >
+              <Heading fontSize="xl">{productInfo.name['en-US']}</Heading>
+
+              {productImage && (
+                <Image
+                  src={productImage.url}
+                  alt="Product"
+                  boxSize="200px"
+                  objectFit="cover"
+                  mt={2}
+                />
+              )}
+
+              <Text mt={2}>
+                {productInfo.description?.['en-US'] || 'No description'}
+              </Text>
+
+              {productPrice && (
+                <Text mt={2} fontWeight="bold">
+                  Price:{' '}
+                  {(
+                    productPrice.value.centAmount /
+                    10 ** productPrice.value.fractionDigits
+                  ).toFixed(productPrice.value.fractionDigits)}{' '}
+                  {productPrice.value.currencyCode}
+                </Text>
+              )}
+            </Box>
+          );
+        })}
+      </VStack>
     );
   };
 
   return (
-    <div>
-      <div className="card">
-        <button
-          onClick={() => {
-            getME()
-              .then((data) => {
-                console.log('getMe', data);
-              })
-              .catch((error) => console.log('getMeError', error));
-          }}
-        >
-          get me
-        </button>
-      </div>
-      {getProductList(dataProducts)}
+    <Box p={6} maxW="7xl" mx="auto">
+      <Center>
+        <VStack spacing={4}>
+          <Heading fontSize="3xl" color="primary.500">
+            Welcome to our flower shop!
+          </Heading>
 
-      <h1>Main Page</h1>
-      <p>
-        Status:{' '}
-        {user.isAuthenticated ? `Logged in as ${user.email}` : 'Not logged in'}
-      </p>
-    </div>
+          <Button
+            onClick={() =>
+              getME()
+                .then((data) => console.log('getMe', data))
+                .catch((error) => console.log('getMeError', error))
+            }
+            colorScheme="teal"
+            size="sm"
+          >
+            Get Me
+          </Button>
+
+          <Text fontSize="md">
+            Status:{' '}
+            {user.isAuthenticated
+              ? `Logged in as ${user.email}`
+              : 'Not logged in'}
+          </Text>
+        </VStack>
+      </Center>
+
+      {getProductList(dataProducts, bgProductCard)}
+    </Box>
   );
-}
+};
+
+export default MainPage;

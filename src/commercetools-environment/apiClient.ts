@@ -70,6 +70,28 @@ class ApiClient {
       }
     }
   }
+
+  async registerCustomer(data: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }) {
+    const response = await this.apiRoot
+      .me()
+      .signup()
+      .post({
+        body: {
+          email: data.email,
+          password: data.password,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        },
+      })
+      .execute();
+
+    return response.body;
+  }
 }
 
 export const apiClient = new ApiClient();
