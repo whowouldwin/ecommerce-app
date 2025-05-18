@@ -7,12 +7,10 @@ interface LayoutProps {
   showAuthButtons?: boolean;
 }
 
-const Layout = ({ children, showAuthButtons }: LayoutProps) => {
-  const isLoggedIn = Boolean(localStorage.getItem('token'));
-
+const Layout = ({ children }: LayoutProps) => {
   return (
     <Box minH="100vh">
-      <Header isLoggedIn={isLoggedIn} showAuthButtons={showAuthButtons} />
+      <Header />
       <Container as="main" maxW="container.lg" py={6}>
         {children}
       </Container>
