@@ -5,6 +5,7 @@ import {
   Button,
   useDisclosure,
   useMediaQuery,
+  useColorModeValue,
   Container,
   Spacer,
   Link as ChakraLink,
@@ -25,6 +26,7 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const bgHeader = useColorModeValue('white', 'gray.800');
 
   const user = useAppSelector(selectUser);
 
@@ -39,7 +41,13 @@ const Header = () => {
 
   return (
     <>
-      <Flex as="header" p={4} boxShadow="sm" borderBottomRadius="md" bg="white">
+      <Flex
+        as="header"
+        p={4}
+        boxShadow="sm"
+        borderBottomRadius="md"
+        bg={bgHeader}
+      >
         <Container maxW="container.lg" display="flex" alignItems="center">
           <Flex align="center">
             {!isAuthPage && (
@@ -97,7 +105,7 @@ const Header = () => {
                     <Button
                       as={RouterLink}
                       to="/login"
-                      colorScheme="teal"
+                      colorScheme="brand"
                       variant={
                         location.pathname === '/login' ? 'solid' : 'outline'
                       }
@@ -108,7 +116,7 @@ const Header = () => {
                     <Button
                       as={RouterLink}
                       to="/register"
-                      colorScheme="teal"
+                      colorScheme="brand"
                       variant={
                         location.pathname === '/register' ? 'solid' : 'outline'
                       }
@@ -125,6 +133,7 @@ const Header = () => {
               <Button
                 variant="outline"
                 colorScheme="brand"
+                size="sm"
                 onClick={() => navigate(-1)}
               >
                 Back

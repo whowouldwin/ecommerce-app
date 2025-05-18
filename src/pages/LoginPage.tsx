@@ -10,7 +10,10 @@ import {
   VStack,
   useToast,
   useColorModeValue,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
@@ -26,32 +29,58 @@ const LoginPage: React.FC = () => {
 
   const user = useAppSelector(selectUser);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (user.isAuthenticated) {
       navigate('/');
     }
   }, [navigate, user]);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      setEmailError('Email is required');
+    } else if (trimmed !== value) {
+      setEmailError('No leading or trailing spaces allowed');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
+      setEmailError('Enter a valid email address');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      setPasswordError('Password is required');
+    } else if (trimmed !== value) {
+      setPasswordError('No leading or trailing spaces allowed');
+    } else if (trimmed.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+    } else if (!/[A-Z]/.test(trimmed)) {
+      setPasswordError('At least one uppercase letter required');
+    } else if (!/[a-z]/.test(trimmed)) {
+      setPasswordError('At least one lowercase letter required');
+    } else if (!/[0-9]/.test(trimmed)) {
+      setPasswordError('At least one number required');
+    } else {
+      setPasswordError('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
-    if (!email || !password) {
-      setError('Please fill in all fields!');
-      return;
-    }
-
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError('Please enter correct email!');
-      return;
-    }
-
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long!');
+    if (emailError || passwordError || !email || !password) {
       return;
     }
 
@@ -72,13 +101,13 @@ const LoginPage: React.FC = () => {
           ),
         });
       } else {
-        setError('Login failed: Invalid credentials');
+        setPasswordError('Login failed: Invalid credentials');
       }
     } catch (err) {
       if (err instanceof Error) {
-        setError(`Error: ${err.message}`);
+        setPasswordError(`Error: ${err.message}`);
       } else {
-        setError('Unknown error occurred. Try again!');
+        setPasswordError('Unknown error occurred. Try again!');
       }
     }
   };
@@ -106,29 +135,47 @@ const LoginPage: React.FC = () => {
           Sign In to FLR
         </Heading>
 
-        <FormControl isRequired>
+        <FormControl isRequired isInvalid={!!emailError}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmailChange(e.target.value)}
           />
+          {emailError && (
+            <Text color="red.500" fontSize="sm" mt={1} fontWeight="medium">
+              {emailError}
+            </Text>
+          )}
         </FormControl>
 
-        <FormControl isRequired>
+        <FormControl isRequired isInvalid={!!passwordError}>
           <FormLabel>Password</FormLabel>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <InputGroup>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              pr="4.5rem"
+            />
+            <InputRightElement width="3rem">
+              <Button
+                h="1.75rem"
+                size="sm"
+                onClick={() => setShowPassword(!showPassword)}
+                variant="ghost"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          {passwordError && (
+            <Text color="red.500" fontSize="sm" mt={1} fontWeight="medium">
+              {passwordError}
+            </Text>
+          )}
         </FormControl>
-
-        {error && (
-          <Text color="red.500" fontSize="sm">
-            {error}
-          </Text>
-        )}
 
         <Button colorScheme="blue" type="submit" width="full">
           Sign In
