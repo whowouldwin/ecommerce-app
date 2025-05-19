@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Layout from './components/Layout/Layout';
@@ -7,9 +8,10 @@ import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
 import DeliveryPage from './pages/DeliveryPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Provider store={store}>
       <Router>
@@ -42,7 +44,9 @@ function App() {
             path="/register"
             element={
               <Layout>
-                <RegisterPage />
+                <ProtectedRoute authenticationRequired={false}>
+                  <RegisterPage />
+                </ProtectedRoute>
               </Layout>
             }
           />
@@ -50,7 +54,9 @@ function App() {
             path="/login"
             element={
               <Layout>
-                <LoginPage />
+                <ProtectedRoute authenticationRequired={false}>
+                  <LoginPage />
+                </ProtectedRoute>
               </Layout>
             }
           />
@@ -59,6 +65,6 @@ function App() {
       </Router>
     </Provider>
   );
-}
+};
 
 export { App };

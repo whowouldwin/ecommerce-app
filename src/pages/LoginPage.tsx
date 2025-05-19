@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -14,8 +14,7 @@ import {
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
-import { useAppSelector } from '../store/hooks';
-import { selectUser, loginUser } from '../features/user/userSlice';
+import { loginUser } from '../features/user/userSlice';
 import CustomToast from '../components/CustomToast';
 
 const LoginPage: React.FC = () => {
@@ -23,14 +22,6 @@ const LoginPage: React.FC = () => {
   const location = useLocation();
   const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
-
-  const user = useAppSelector(selectUser);
-
-  useEffect(() => {
-    if (user.isAuthenticated) {
-      navigate('/');
-    }
-  }, [navigate, user]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,6 +62,7 @@ const LoginPage: React.FC = () => {
             />
           ),
         });
+        navigate(location.state?.from || '/', { replace: true });
       } else {
         setError('Login failed: Invalid credentials');
       }
