@@ -6,6 +6,7 @@ import { configDefaults } from 'vitest/config';
 export default defineConfig({
   plugins: [react()],
   build: {
+    target: 'esnext',
     outDir: 'dist',
     sourcemap: true,
   },
