@@ -14,11 +14,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   authenticationRequired = true,
 }) => {
-  const { isAuthenticated, status, isVerifying } = useAppSelector(selectUser);
+  const { isAuthenticated, status } = useAppSelector(selectUser);
   const location = useLocation();
 
   if (
-    (isVerifying || status === RequestStatus.LOADING) &&
+    (isAuthenticated || status === RequestStatus.LOADING) &&
     authenticationRequired
   ) {
     return (
