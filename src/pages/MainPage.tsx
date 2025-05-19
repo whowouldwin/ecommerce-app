@@ -27,7 +27,7 @@ const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
 
 const MainPage = () => {
   const user = useAppSelector(selectUser);
-  const bgProductCard = useColorModeValue('gray.50', 'gray.700'); // ✅ Хук — на верхнем уровне
+  const bgProductCard = useColorModeValue('gray.50', 'gray.700');
 
   const [dataProducts, setDataProducts] = useState(INITIAL_DATA_PRODUCTS);
 
@@ -59,7 +59,7 @@ const MainPage = () => {
               shadow="md"
               borderWidth="1px"
               borderRadius="lg"
-              bg={cardBg} // ✅ использует переменную, а не хук внутри
+              bg={cardBg}
             >
               <Heading fontSize="xl">{productInfo.name['en-US']}</Heading>
 
@@ -105,8 +105,8 @@ const MainPage = () => {
           <Button
             onClick={() =>
               getME()
-                .then((data) => console.log('getMe', data))
-                .catch((error) => console.log('getMeError', error))
+                .then((data) => console.log('User data is:', data))
+                .catch((error) => console.log("User data doesn't found", error))
             }
             colorScheme="teal"
             size="sm"
