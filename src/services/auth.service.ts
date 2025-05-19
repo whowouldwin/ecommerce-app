@@ -59,6 +59,9 @@ export const registerCustomer = async (data: MyCustomerDraft) => {
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
+        addresses: data.addresses || [],
+        defaultShippingAddress: data.defaultShippingAddress,
+        defaultBillingAddress: data.defaultBillingAddress,
       },
     })
     .execute();
