@@ -19,7 +19,7 @@ import { FormFields } from '../types/types';
 import CustomToast from '../components/CustomToast';
 import { useAppDispatch } from '../store/hooks';
 import { loginUser } from '../features/user/userSlice';
-import { apiClient } from '../commercetools-environment/apiClient';
+import { registerCustomer } from '../services';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -68,7 +68,13 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      await apiClient.registerCustomer({
+      // await apiClient.registerCustomer({
+      //   email: form.email,
+      //   password: form.password,
+      //   firstName: form.firstName,
+      //   lastName: form.lastName,
+      // });
+      await registerCustomer({
         email: form.email,
         password: form.password,
         firstName: form.firstName,

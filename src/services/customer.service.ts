@@ -1,5 +1,5 @@
 import { apiClient } from '../commercetools-environment/apiClient.ts';
 
-export const getME = () => {
-  return apiClient.getApiRoot().me().get().execute();
+export const getME = async () => {
+  return await apiClient.getApiRoot().me().get().execute();
 };

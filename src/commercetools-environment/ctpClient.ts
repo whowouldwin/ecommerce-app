@@ -46,7 +46,6 @@ export function getCtpClientWithRefreshTokenFlow(refreshToken: string) {
       ...defaultMiddlewareOptions.credentials,
     },
     refreshToken: refreshToken,
-    tokenCache: tokenCacheStore,
   };
 
   return new ClientBuilder()
