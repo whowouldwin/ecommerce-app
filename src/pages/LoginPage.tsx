@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -17,8 +17,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
-import { useAppSelector } from '../store/hooks';
-import { selectUser, loginUser } from '../features/user/userSlice';
+import { loginUser } from '../features/user/userSlice';
 import CustomToast from '../components/CustomToast';
 
 const LoginPage: React.FC = () => {
@@ -27,19 +26,12 @@ const LoginPage: React.FC = () => {
   const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
 
-  const user = useAppSelector(selectUser);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (user.isAuthenticated) {
-      navigate('/');
-    }
-  }, [navigate, user]);
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -100,6 +92,7 @@ const LoginPage: React.FC = () => {
             />
           ),
         });
+        navigate(location.state?.from || '/', { replace: true });
       } else {
         setPasswordError('Login failed: Invalid credentials');
       }
