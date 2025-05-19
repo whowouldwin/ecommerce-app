@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import Layout from './components/Layout/Layout';
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
+import DeliveryPage from './pages/DeliveryPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './routes/ProtectedRoute.tsx';
+import { store } from './store/store.ts';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout showAuthButtons>
+                <MainPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <Layout showAuthButtons>
+                <AboutPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/delivery"
+            element={
+              <Layout showAuthButtons>
+                <DeliveryPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Layout>
+                <ProtectedRoute authenticationRequired={false}>
+                  <RegisterPage />
+                </ProtectedRoute>
+              </Layout>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Layout>
+                <ProtectedRoute authenticationRequired={false}>
+                  <LoginPage />
+                </ProtectedRoute>
+              </Layout>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+    </Provider>
+  );
+};
 
-export default App
+export { App };
