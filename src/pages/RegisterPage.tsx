@@ -68,12 +68,6 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      // await apiClient.registerCustomer({
-      //   email: form.email,
-      //   password: form.password,
-      //   firstName: form.firstName,
-      //   lastName: form.lastName,
-      // });
       await registerCustomer({
         email: form.email,
         password: form.password,
