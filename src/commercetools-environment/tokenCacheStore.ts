@@ -8,6 +8,13 @@ class TokenCacheStore implements TokenCache {
     refreshToken: '',
     expirationTime: 0,
   };
+  public clear() {
+    this.cache = {
+      token: '',
+      refreshToken: '',
+      expirationTime: 0,
+    };
+  }
 
   public get(): TokenStore {
     return this.cache;
