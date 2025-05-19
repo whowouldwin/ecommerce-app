@@ -26,7 +26,6 @@ const LoginPage: React.FC = () => {
   const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
 
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
