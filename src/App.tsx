@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Layout from './components/Layout/Layout';
@@ -9,10 +10,12 @@ import DeliveryPage from './pages/DeliveryPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
+import AuthVerifier from './components/AuthVerifier';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Provider store={store}>
+      <AuthVerifier />
       <Router>
         <Routes>
           <Route
@@ -64,6 +67,6 @@ function App() {
       </Router>
     </Provider>
   );
-}
+};
 
 export { App };

@@ -1,35 +1,65 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../store/store.ts';
-import { login, logout } from '../../services';
+import { TokenStore } from '@commercetools/ts-client';
+import { RootState } from '../../store/store';
+import { login, logout, verifyAuthentication } from '../../services';
 import { IUserAuthData } from '../../types';
-import { RequestStatus, LocalStorageKey } from '../../enums/appEnums.ts';
+import { RequestStatus, LocalStorageKey } from '../../enums/appEnums';
 import { getDataFromLS } from '../../services';
 
 interface UserState {
   isAuthenticated: boolean;
   email: string | null;
   status: RequestStatus;
+  isVerifying: boolean;
 }
 
-const sessionData = getDataFromLS(LocalStorageKey.SESSION);
-const isAuthenticated = Boolean(sessionData?.token);
-
-const savedUserState = localStorage.getItem('userState');
-let parsedUserState: UserState | null = null;
-
-if (savedUserState) {
+const loadUserState = (): UserState | undefined => {
   try {
-    parsedUserState = JSON.parse(savedUserState);
-  } catch (e) {
-    console.error('Failed to parse user state from localStorage', e);
-  }
-}
+    const raw = localStorage.getItem('userState');
+    if (!raw) return undefined;
 
-const initialState: UserState = parsedUserState || {
-  isAuthenticated,
-  email: null,
-  status: RequestStatus.IDLE,
+    const parsed = JSON.parse(raw);
+
+    return {
+      ...parsed,
+      isVerifying: false,
+    };
+  } catch (error) {
+    console.error('Failed to load user state from localStorage:', error);
+    return undefined;
+  }
 };
+
+const saveUserState = (state: UserState) => {
+  try {
+    const stateToSave = {
+      ...state,
+      isVerifying: false,
+    };
+
+    localStorage.setItem('userState', JSON.stringify(stateToSave));
+  } catch (error) {
+    console.error('Failed to save user state to localStorage:', error);
+  }
+};
+
+const session: TokenStore | null = getDataFromLS(LocalStorageKey.SESSION);
+const hasToken = Boolean(session?.token);
+
+const persisted = loadUserState();
+
+const initialState: UserState = persisted
+  ? {
+      ...persisted,
+      isVerifying: hasToken,
+      status: hasToken ? RequestStatus.LOADING : RequestStatus.IDLE,
+    }
+  : {
+      isAuthenticated: false,
+      email: null,
+      status: hasToken ? RequestStatus.LOADING : RequestStatus.IDLE,
+      isVerifying: hasToken,
+    };
 
 export const loginUser = createAsyncThunk(
   'user/login',
@@ -55,6 +85,18 @@ export const logoutUser = createAsyncThunk(
   },
 );
 
+export const verifyAuth = createAsyncThunk(
+  'user/verify',
+  async (_, thunkAPI) => {
+    try {
+      const userData = await verifyAuthentication();
+      return userData;
+    } catch {
+      return thunkAPI.rejectWithValue('Authentication verification failed');
+    }
+  },
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -68,23 +110,61 @@ export const userSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.status = RequestStatus.LOADING;
+        state.isVerifying = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = RequestStatus.IDLE;
         state.isAuthenticated = true;
         state.email = action.payload.email;
+        state.isVerifying = false;
       })
       .addCase(loginUser.rejected, (state) => {
         state.status = RequestStatus.FAILED;
         state.isAuthenticated = false;
         state.email = null;
+        state.isVerifying = false;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = RequestStatus.LOADING;
+        state.isVerifying = true;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.email = null;
         state.status = RequestStatus.IDLE;
+        state.isVerifying = false;
         localStorage.removeItem('userState');
-      });
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.status = RequestStatus.FAILED;
+        state.isVerifying = false;
+      })
+      .addCase(verifyAuth.pending, (state) => {
+        state.status = RequestStatus.LOADING;
+        state.isVerifying = true;
+      })
+      .addCase(verifyAuth.fulfilled, (state, action) => {
+        state.status = RequestStatus.IDLE;
+        state.isAuthenticated = true;
+        state.email = action.payload.email;
+        state.isVerifying = false;
+      })
+      .addCase(verifyAuth.rejected, (state) => {
+        state.status = RequestStatus.IDLE;
+        state.isAuthenticated = false;
+        state.email = null;
+        state.isVerifying = false;
+      })
+      .addMatcher(
+        (action) =>
+          action.type === 'user/login/fulfilled' ||
+          action.type === 'user/logout/fulfilled' ||
+          action.type === 'user/verify/fulfilled' ||
+          action.type === 'user/verify/rejected',
+        (state) => {
+          saveUserState(state);
+        },
+      );
   },
 });
 

@@ -1,6 +1,8 @@
 import {
   ByProjectKeyRequestBuilder,
   createApiBuilderFromCtpClient,
+  Customer,
+  CustomerSignInResult,
 } from '@commercetools/platform-sdk';
 import { Client, TokenStore, UserAuthOptions } from '@commercetools/ts-client';
 import {
@@ -76,7 +78,7 @@ class ApiClient {
     password: string;
     firstName: string;
     lastName: string;
-  }) {
+  }): Promise<CustomerSignInResult> {
     const response = await this.apiRoot
       .me()
       .signup()
@@ -91,6 +93,17 @@ class ApiClient {
       .execute();
 
     return response.body;
+  }
+
+  async getCurrentUser(): Promise<Customer> {
+    try {
+      const response = await this.apiRoot.me().get().execute();
+
+      return response.body;
+    } catch (error) {
+      console.error('Failed to get current user:', error);
+      throw error;
+    }
   }
 }
 
