@@ -1,75 +1,80 @@
-import { Button, VStack } from '@chakra-ui/react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Button, VStack, HStack } from '@chakra-ui/react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectUser, logoutUser } from '../../features/user/userSlice';
 
 interface AuthButtonsProps {
-  isLoggedIn: boolean;
   isVertical?: boolean;
   onClose?: () => void;
   showAuthButtons?: boolean;
 }
 
 const AuthButtons = ({
-  isLoggedIn,
   isVertical = false,
   onClose,
-  showAuthButtons,
+  showAuthButtons = true,
 }: AuthButtonsProps) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useAppSelector(selectUser);
 
-  const onLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-    onClose?.();
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        navigate('/');
+        onClose?.();
+      })
+      .catch(console.error);
   };
 
-  const onLogin = () => {
-    navigate('/login');
-    onClose?.();
-  };
+  const Stack = isVertical ? VStack : HStack;
 
-  const onRegister = () => {
-    navigate('/register', { state: { from: location.pathname } });
-    onClose?.();
-  };
-
-  if (isLoggedIn) {
+  if (user.isAuthenticated) {
     return (
-      <Button
-        variant="outline"
-        colorScheme="red"
-        w={isVertical ? 'full' : undefined}
-        onClick={onLogout}
-      >
-        Log out
-      </Button>
+      <Stack spacing={isVertical ? 3 : 2}>
+        <Button
+          colorScheme="red"
+          variant="outline"
+          size="sm"
+          onClick={handleLogout}
+          width={isVertical ? '100%' : undefined}
+        >
+          Logout
+        </Button>
+      </Stack>
     );
   }
 
   if (!showAuthButtons) return null;
 
-  const buttons = (
-    <>
+  return (
+    <Stack spacing={isVertical ? 3 : 2}>
       <Button
+        as={RouterLink}
+        to="/login"
+        colorScheme="brand"
         variant={location.pathname === '/login' ? 'solid' : 'outline'}
-        colorScheme="brand"
-        w={isVertical ? 'full' : undefined}
-        onClick={onLogin}
+        size="sm"
+        width={isVertical ? '100%' : undefined}
+        onClick={onClose}
       >
-        Sign In
+        Login
       </Button>
       <Button
-        variant={location.pathname === '/register' ? 'solid' : 'outline'}
+        as={RouterLink}
+        to="/register"
         colorScheme="brand"
-        w={isVertical ? 'full' : undefined}
-        onClick={onRegister}
+        variant={location.pathname === '/register' ? 'solid' : 'outline'}
+        size="sm"
+        width={isVertical ? '100%' : undefined}
+        onClick={onClose}
       >
-        Sign Up
+        Register
       </Button>
-    </>
+    </Stack>
   );
-
-  return isVertical ? <VStack spacing={3}>{buttons}</VStack> : <>{buttons}</>;
 };
 
 export default AuthButtons;

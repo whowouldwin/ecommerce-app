@@ -19,12 +19,7 @@ interface BurgerMenuProps {
   showAuthButtons?: boolean;
 }
 
-const BurgerMenu = ({
-  isOpen,
-  onClose,
-  isLoggedIn,
-  showAuthButtons,
-}: BurgerMenuProps) => {
+const BurgerMenu = ({ isOpen, onClose, showAuthButtons }: BurgerMenuProps) => {
   return (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
       <DrawerOverlay />
@@ -44,7 +39,6 @@ const BurgerMenu = ({
             </VStack>
             <Box pt={4} borderTop="1px solid" borderColor="gray.200">
               <AuthButtons
-                isLoggedIn={isLoggedIn}
                 isVertical
                 onClose={onClose}
                 showAuthButtons={showAuthButtons}

@@ -1,56 +1,39 @@
 import {
+  Box,
   Flex,
   IconButton,
-  Box,
-  Button,
+  useColorModeValue,
   useDisclosure,
   useMediaQuery,
-  useColorModeValue,
-  Container,
-  Spacer,
-  Link as ChakraLink,
-  Image,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import ThemeToggle from '../ThemeToggle';
 import NavLinks from './NavLinks';
 import BurgerMenu from './BurgerMenu';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { selectUser, logoutUser } from '../../features/user/userSlice';
-import logo from '../../assets/logo.svg';
+import { useAppSelector } from '../../store/hooks';
+import { selectUser } from '../../features/user/userSlice';
+import LogoBrand from './LogoBrand.tsx';
+import AuthButtons from './AuthButtons.tsx';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isNarrow] = useMediaQuery('(max-width: 489px)');
-  const location = useLocation();
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const bgHeader = useColorModeValue('white', 'gray.800');
 
   const user = useAppSelector(selectUser);
 
-  const handleLogout = () => {
-    dispatch(logoutUser())
-      .unwrap()
-      .then(() => navigate('/'))
-      .catch(console.error);
-  };
-
-  const isAuthPage = ['/login', '/register'].includes(location.pathname);
-
   return (
     <>
-      <Flex
+      <Box
         as="header"
-        p={4}
+        bg={bgHeader}
         boxShadow="sm"
         borderBottomRadius="md"
-        bg={bgHeader}
+        py={6}
       >
-        <Container maxW="container.xl" display="flex" alignItems="center">
-          <Flex align="center">
-            {!isAuthPage && (
+        <Box maxW="7xl" px={6} mx="auto">
+          <Flex align="center" justify="space-between" wrap="wrap">
+            <Flex align="center">
               <IconButton
                 icon={<HamburgerIcon />}
                 variant="ghost"
@@ -60,90 +43,20 @@ const Header = () => {
                 onClick={onOpen}
                 mr={2}
               />
-            )}
+              <LogoBrand />
+            </Flex>
 
-            <ChakraLink
-              as={RouterLink}
-              to="/"
-              _hover={{ textDecoration: 'none' }}
-            >
-              <Flex align="center" gap={3}>
-                <Image src={logo} alt="Logo" height="40px" className="logo" />
-                <Box
-                  lineHeight="short"
-                  color="primary"
-                  _dark={{ color: 'brand.300' }}
-                >
-                  <Box fontWeight="bold">FLR</Box>
-                  <Box fontSize="sm" display={{ base: 'none', md: 'block' }}>
-                    Product Customers Pr
-                  </Box>
-                </Box>
-              </Flex>
-            </ChakraLink>
-          </Flex>
-
-          <Spacer />
-
-          {!isAuthPage && (
             <Flex gap={6} align="center" display={{ base: 'none', md: 'flex' }}>
               <NavLinks />
             </Flex>
-          )}
 
-          <Spacer />
-
-          <Flex align="center" gap={3}>
-            {!isNarrow && (
-              <>
-                {user.isAuthenticated ? (
-                  <Button colorScheme="red" size="sm" onClick={handleLogout}>
-                    Logout
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      as={RouterLink}
-                      to="/login"
-                      colorScheme="brand"
-                      variant={
-                        location.pathname === '/login' ? 'solid' : 'outline'
-                      }
-                      size="sm"
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      as={RouterLink}
-                      to="/register"
-                      colorScheme="brand"
-                      variant={
-                        location.pathname === '/register' ? 'solid' : 'outline'
-                      }
-                      size="sm"
-                    >
-                      Register
-                    </Button>
-                  </>
-                )}
-              </>
-            )}
-
-            {isAuthPage && (
-              <Button
-                variant="outline"
-                colorScheme="brand"
-                size="sm"
-                onClick={() => navigate(-1)}
-              >
-                Back
-              </Button>
-            )}
-
-            <ThemeToggle />
+            <Flex align="center" gap={3} mt={{ base: 3, md: 0 }}>
+              {!isNarrow && <AuthButtons />}
+              <ThemeToggle />
+            </Flex>
           </Flex>
-        </Container>
-      </Flex>
+        </Box>
+      </Box>
 
       <BurgerMenu
         isOpen={isOpen}
