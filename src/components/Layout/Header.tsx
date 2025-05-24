@@ -48,7 +48,7 @@ const Header = () => {
         borderBottomRadius="md"
         bg={bgHeader}
       >
-        <Container maxW="container.lg" display="flex" alignItems="center">
+        <Container maxW="container.xl" display="flex" alignItems="center">
           <Flex align="center">
             {!isAuthPage && (
               <IconButton

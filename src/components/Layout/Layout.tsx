@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box minH="100vh">
       <Header />
-      <Container as="main" maxW="container.lg" py={6}>
+      <Container as="main" maxW="container.xl" py={6}>
         {children}
       </Container>
     </Box>
