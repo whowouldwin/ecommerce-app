@@ -17,7 +17,7 @@ const HeroSection = () => {
       direction={{ base: 'column', md: 'row' }}
       align="center"
       justify="space-between"
-      py={{ base: 20, md: 32 }}
+      py={{ base: 16, md: 24 }}
       px={{ base: 4, md: 16 }}
       gap={12}
       bg={useColorModeValue('white', 'gray.900')}

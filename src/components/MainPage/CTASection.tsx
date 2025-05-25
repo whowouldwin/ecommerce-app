@@ -45,7 +45,7 @@ const CTASection = () => {
   const textColor = useColorModeValue('gray.600', 'gray.300');
 
   return (
-    <Box px={{ base: 4, md: 16 }} py={{ base: 20, md: 28 }} textAlign="center">
+    <Box px={{ base: 4, md: 16 }} py={{ base: 12, md: 16 }} textAlign="center">
       <Heading
         as="h2"
         fontSize={{ base: '2xl', md: '4xl' }}
