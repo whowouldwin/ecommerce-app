@@ -8,6 +8,7 @@ import { getProducts } from '../services';
 import { getProductList } from '../components/getProductList.tsx';
 import UserStatus from '../components/UserStatus.tsx';
 import HeroSection from '../components/MainPage/HeroSection.tsx';
+import CTASection from '../components/MainPage/CTASection.tsx';
 
 const INITIAL_DATA_PRODUCTS: ProductPagedQueryResponse = {
   limit: 0,
@@ -33,6 +34,7 @@ const MainPage = () => {
       <UserStatus />
       {getProductList(dataProducts, bgProductCard)}
       <HeroSection />
+      <CTASection />
     </Box>
   );
 };
