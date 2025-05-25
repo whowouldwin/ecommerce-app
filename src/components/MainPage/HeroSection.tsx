@@ -3,22 +3,32 @@ import girl from '../../assets/girl.png';
 
 const HeroSection = () => {
   return (
-    <Flex direction={{ base: 'column', md: 'row' }} align="center" py={10}>
-      <Box flex="1" textAlign={{ base: 'center', md: 'left' }} px={6}>
-        <Heading as="h1" size="2xl" mb={4}>
-          Bringing Emotions to Life Through Flowers
+    <Flex
+      direction={{ base: 'column', md: 'row' }}
+      align="center"
+      justify="space-between"
+      py={{ base: 20, md: 32 }}
+      gap={12}
+      bg="white"
+    >
+      <Box flex="1" textAlign={{ base: 'center', md: 'left' }}>
+        <Heading
+          as="h2"
+          size="2xl"
+          mb={12}
+          fontWeight="bold"
+          lineHeight="1.2"
+          fontFamily="'Poppins', sans-serif"
+        >
+          Bringing Emotions <br />
+          to Life Through Flowers
         </Heading>
-        <Text fontSize="lg">
+        <Text fontSize="lg" mb={6} fontFamily="'Poppins', sans-serif">
           Bouquets for every occasion — made with love and delivered with care.
         </Text>
       </Box>
-      <Box
-        flex="1"
-        display="flex"
-        justifyContent="center"
-        mt={{ base: 8, md: 0 }}
-      >
-        <Image src={girl} alt="Flower Girl" maxW="300px" />
+      <Box flex="1" display="flex" justifyContent="center">
+        <Image src={girl} alt="Flower Girl" maxW="100%" maxH="360px" />
       </Box>
     </Flex>
   );

@@ -46,8 +46,8 @@ const theme = extendTheme({
     }),
   },
   fonts: {
-    heading: `'Montserrat', sans-serif`,
-    body: `'Open Sans', sans-serif`,
+    heading: `'Poppins', sans-serif`,
+    body: `'Poppins', sans-serif`,
   },
   components: {
     Button: {
