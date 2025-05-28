@@ -10,7 +10,9 @@ import {
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Category, LocalizedString } from '@commercetools/platform-sdk';
+import { useNavigate } from 'react-router-dom';
+import { Category } from '@commercetools/platform-sdk';
+import { getLocalizedText } from '../../utils/localization.ts';
 import { fetchCategories } from '../../features/category/categorySlice';
 import { AppDispatch, RootState } from '../../store/store';
 
@@ -27,15 +29,6 @@ const categoryImages: Record<string, string> = {
   'flower-s-f': flowerSF,
 };
 
-const getLocalizedValue = (localizedField?: LocalizedString): string => {
-  return (
-    localizedField?.en ||
-    localizedField?.['en-US'] ||
-    Object.values(localizedField || {})[0] ||
-    ''
-  );
-};
-
 const getImageUrl = (cat: Category): string => {
   const key = cat.key?.toLowerCase() || 'default';
   return categoryImages[key] || defaultImg;
@@ -43,6 +36,8 @@ const getImageUrl = (cat: Category): string => {
 
 const ProductCategories = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const { categories, loading, error } = useSelector(
     (state: RootState) => state.category,
   );
@@ -54,8 +49,10 @@ const ProductCategories = () => {
   const overlayText = useColorModeValue('white', 'white');
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories.length]);
 
   if (loading) {
     return <Text px={4}>Loading categories...</Text>;
@@ -90,9 +87,8 @@ const ProductCategories = () => {
         {categories
           .filter((cat) => !cat.parent)
           .map((cat) => {
-            const title = getLocalizedValue(cat.name) || 'Unnamed Category';
-            const description =
-              getLocalizedValue(cat.description) || 'No description available';
+            const title = getLocalizedText(cat.name);
+            const description = getLocalizedText(cat.description);
             const imgSrc = getImageUrl(cat);
 
             return (
@@ -149,6 +145,7 @@ const ProductCategories = () => {
                     colorScheme="orange"
                     fontWeight="medium"
                     alignSelf="flex-start"
+                    onClick={() => navigate(`/products?category=${cat.key}`)}
                   >
                     See More
                   </Button>
@@ -157,6 +154,16 @@ const ProductCategories = () => {
             );
           })}
       </SimpleGrid>
+
+      <Flex justify="center" mt={10}>
+        <Button
+          size="md"
+          colorScheme="blue"
+          onClick={() => navigate('/products')}
+        >
+          Show All
+        </Button>
+      </Flex>
     </Box>
   );
 };
