@@ -10,6 +10,7 @@ import {
   Flex,
   Button,
 } from '@chakra-ui/react';
+import { useColorModeValue } from '@chakra-ui/react';
 import { getLocalizedText } from '../utils/localization.ts';
 import { fetchProducts } from '../features/product/productSlice.ts';
 import { fetchCategories } from '../features/category/categorySlice.ts';
@@ -20,6 +21,10 @@ const useQuery = () => {
 };
 
 const ProductsPage = () => {
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const headingColor = useColorModeValue('gray.900', 'white');
+  const textColor = useColorModeValue('gray.600', 'gray.300');
+
   const dispatch = useDispatch<AppDispatch>();
   const query = useQuery();
   const selectedCategoryKey = query.get('category');
@@ -66,7 +71,7 @@ const ProductsPage = () => {
 
   return (
     <Box maxW="container.xl" mx="auto" px={4} py={10}>
-      <Heading mb={6}>
+      <Heading mb={6} color={headingColor}>
         {selectedCategoryKey
           ? `Products in "${selectedCategoryKey}"`
           : 'All Products'}
@@ -75,7 +80,7 @@ const ProductsPage = () => {
       {filteredProducts.length === 0 ? (
         <Text>No products found.</Text>
       ) : (
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={6}>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={6}>
           {filteredProducts.map((product) => {
             const imageUrl =
               product.masterVariant?.images?.[0]?.url ||
@@ -92,7 +97,7 @@ const ProductsPage = () => {
                 borderRadius="xl"
                 boxShadow="md"
                 overflow="hidden"
-                bg="white"
+                bg={cardBg}
               >
                 <Image
                   src={imageUrl}
@@ -106,7 +111,7 @@ const ProductsPage = () => {
                   <Text fontWeight="bold" fontSize="md" mb={1}>
                     {getLocalizedText(product.name)}
                   </Text>
-                  <Text fontSize="sm" mb={2} color="gray.600">
+                  <Text fontSize="sm" mb={2} color={textColor}>
                     {getLocalizedText(product.description)}
                   </Text>
 
