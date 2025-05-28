@@ -1,52 +1,75 @@
-import { Product } from '@commercetools/platform-sdk';
-import { Box, Heading, Image, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Image,
+  Text,
+  Flex,
+  Button,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { getLocalizedText } from '../utils/localization.ts';
+import { extractPriceInfo, formatPrice } from '../utils/price.ts';
 
-type Props = {
-  product: Product;
-  bg: string;
+type ProductCardProps = {
+  product: ProductProjection;
 };
 
-const ProductCard = ({ product, bg }: Props) => {
-  const productInfo = product.masterData.current;
-  const productImage = productInfo.masterVariant.images?.[0];
-  const productPrice = productInfo.masterVariant.prices?.[0];
+const ProductCard = ({ product }: ProductCardProps) => {
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const textColor = useColorModeValue('gray.600', 'gray.300');
+
+  const imageUrl =
+    product.masterVariant?.images?.[0]?.url ||
+    product.variants?.[0]?.images?.[0]?.url ||
+    '/placeholder.png';
+
+  const { originalPrice, discountedPrice, currency } =
+    extractPriceInfo(product);
 
   return (
-    <Box
-      key={product.id}
-      p={5}
-      shadow="md"
-      borderWidth="1px"
-      borderRadius="lg"
-      bg={bg}
-    >
-      <Heading fontSize="xl">{productInfo.name['en-US']}</Heading>
+    <Box borderRadius="xl" boxShadow="md" overflow="hidden" bg={cardBg}>
+      <Image
+        src={imageUrl}
+        alt={getLocalizedText(product.name)}
+        w="100%"
+        h="auto"
+        objectFit="cover"
+      />
 
-      {productImage && (
-        <Image
-          src={productImage.url}
-          alt="Product"
-          boxSize="200px"
-          objectFit="cover"
-          mt={2}
-        />
-      )}
-
-      <Text mt={2}>
-        {productInfo.description?.['en-US'] || 'No description'}
-      </Text>
-
-      {productPrice && (
-        <Text mt={2} fontWeight="bold">
-          Price:{' '}
-          {(
-            productPrice.value.centAmount /
-            10 ** productPrice.value.fractionDigits
-          ).toFixed(productPrice.value.fractionDigits)}{' '}
-          {productPrice.value.currencyCode}
+      <Box p={4} textAlign="center">
+        <Text fontWeight="bold" fontSize="md" mb={1}>
+          {getLocalizedText(product.name)}
         </Text>
-      )}
+        <Text fontSize="sm" mb={2} color={textColor}>
+          {getLocalizedText(product.description)}
+        </Text>
+
+        <Flex justify="center" align="center" gap={2} mb={4}>
+          {discountedPrice ? (
+            <>
+              <Text fontWeight="bold" color="red.500" fontSize="lg">
+                {formatPrice(discountedPrice, currency)}
+              </Text>
+              <Text as="s" color="gray.500" fontSize="sm">
+                {formatPrice(originalPrice, currency)}
+              </Text>
+            </>
+          ) : (
+            <Text fontWeight="bold" color="green.500">
+              {formatPrice(originalPrice, currency)}
+            </Text>
+          )}
+        </Flex>
+
+        <Flex justify="center" gap={3}>
+          <Button variant="outline" borderColor="gray.300">
+            View details
+          </Button>
+          <Button colorScheme="green">Add to Cart</Button>
+        </Flex>
+      </Box>
     </Box>
   );
 };
+
 export default ProductCard;
