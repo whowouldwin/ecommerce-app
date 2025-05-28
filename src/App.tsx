@@ -10,6 +10,7 @@ import DeliveryPage from './pages/DeliveryPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
+import ProductsPage from './pages/ProductsPage.tsx';
 
 const App: React.FC = () => {
   return (
@@ -37,6 +38,14 @@ const App: React.FC = () => {
             element={
               <Layout showAuthButtons>
                 <DeliveryPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <Layout showAuthButtons>
+                <ProductsPage />
               </Layout>
             }
           />
