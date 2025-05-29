@@ -15,5 +15,7 @@ export const extractPriceInfo = (product: ProductProjection): PriceInfo => {
   };
 };
 
-export const formatPrice = (amount: number, currency: string): string =>
-  `${(amount / 100).toFixed(2)} ${currency}`;
+export const formatPrice = (amount: number, currency: string): string => {
+  const price = (amount / 100).toFixed(2);
+  return `${price} ${currency}`;
+};
