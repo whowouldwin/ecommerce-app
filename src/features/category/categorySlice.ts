@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { CategoryPagedQueryResponse } from '@commercetools/platform-sdk';
 import { apiClient } from '../../commercetools-environment/apiClient';
 
@@ -6,12 +6,14 @@ interface CategoryState {
   categories: CategoryPagedQueryResponse['results'];
   loading: boolean;
   error: string | null;
+  selectedCategoryKey: string | null;
 }
 
 const initialState: CategoryState = {
   categories: [],
   loading: false,
   error: null,
+  selectedCategoryKey: null,
 };
 
 export const fetchCategories = createAsyncThunk(
@@ -29,7 +31,11 @@ export const fetchCategories = createAsyncThunk(
 const categorySlice = createSlice({
   name: 'category',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedCategoryKey: (state, action: PayloadAction<string | null>) => {
+      state.selectedCategoryKey = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
@@ -47,4 +53,5 @@ const categorySlice = createSlice({
   },
 });
 
+export const { setSelectedCategoryKey } = categorySlice.actions;
 export const categoryReducer = categorySlice.reducer;

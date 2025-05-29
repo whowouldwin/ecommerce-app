@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import {
   Box,
   Heading,
@@ -13,14 +12,12 @@ import { fetchCategories } from '../features/category/categorySlice.ts';
 import { AppDispatch, RootState } from '../store/store.ts';
 import ProductCard from '../components/ProductCard.tsx';
 
-const useQuery = () => new URLSearchParams(useLocation().search);
-
 const ProductsPage = () => {
   const headingColor = useColorModeValue('gray.900', 'white');
-
+  const selectedCategoryKey = useSelector(
+    (state: RootState) => state.category.selectedCategoryKey,
+  );
   const dispatch = useDispatch<AppDispatch>();
-  const query = useQuery();
-  const selectedCategoryKey = query.get('category');
 
   const { products, loading, error } = useSelector(
     (state: RootState) => state.product,
