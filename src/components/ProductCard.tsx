@@ -27,20 +27,36 @@ const ProductCard = ({ product }: ProductCardProps) => {
     extractPriceInfo(product);
 
   return (
-    <Box borderRadius="xl" boxShadow="md" overflow="hidden" bg={cardBg}>
-      <Image
-        src={imageUrl}
-        alt={getLocalizedText(product.name)}
-        w="100%"
-        h="auto"
-        objectFit="cover"
-      />
+    <Box
+      borderRadius="xl"
+      boxShadow="md"
+      overflow="hidden"
+      bg={cardBg}
+      display="flex"
+      flexDirection="column"
+      height="100%"
+    >
+      <Box h="200px" w="100%" overflow="hidden">
+        <Image
+          src={imageUrl}
+          alt={getLocalizedText(product.name)}
+          w="100%"
+          h="100%"
+          objectFit="cover"
+        />
+      </Box>
 
-      <Box p={4} textAlign="center">
+      <Box
+        p={4}
+        textAlign="center"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+      >
         <Text fontWeight="bold" fontSize="md" mb={1}>
           {getLocalizedText(product.name)}
         </Text>
-        <Text fontSize="sm" mb={2} color={textColor}>
+        <Text fontSize="sm" mb={2} color={textColor} noOfLines={2}>
           {getLocalizedText(product.description)}
         </Text>
 
@@ -61,11 +77,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </Flex>
 
-        <Flex justify="center" gap={3}>
-          <Button variant="outline" borderColor="gray.300">
+        <Flex
+          justify="center"
+          gap={3}
+          direction={{ base: 'column', md: 'row' }}
+          align="stretch"
+          mt="auto"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            py={{ base: 3, md: 2 }}
+            flex={{ base: '1 1 100%', md: '0 1 auto' }}
+          >
             View details
           </Button>
-          <Button colorScheme="green">Add to Cart</Button>
+
+          <Button
+            colorScheme="green"
+            size="sm"
+            py={{ base: 3, md: 2 }}
+            flex={{ base: '1 1 100%', md: '0 1 auto' }}
+          >
+            Add to Cart
+          </Button>
         </Flex>
       </Box>
     </Box>

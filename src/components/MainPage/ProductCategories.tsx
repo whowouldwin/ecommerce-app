@@ -13,7 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Category } from '@commercetools/platform-sdk';
 import { getLocalizedText } from '../../utils/localization.ts';
-import { fetchCategories } from '../../features/category/categorySlice';
+import {
+  fetchCategories,
+  setSelectedCategoryKey,
+} from '../../features/category/categorySlice';
 import { AppDispatch, RootState } from '../../store/store';
 
 import flowerBA from '../../assets/flower-b-a.png';
@@ -145,7 +148,10 @@ const ProductCategories = () => {
                     colorScheme="orange"
                     fontWeight="medium"
                     alignSelf="flex-start"
-                    onClick={() => navigate(`/products?category=${cat.key}`)}
+                    onClick={() => {
+                      dispatch(setSelectedCategoryKey(cat.key ?? null));
+                      navigate('/products');
+                    }}
                   >
                     See More
                   </Button>
@@ -159,7 +165,10 @@ const ProductCategories = () => {
         <Button
           size="md"
           colorScheme="blue"
-          onClick={() => navigate('/products')}
+          onClick={() => {
+            dispatch(setSelectedCategoryKey(null));
+            navigate('/products');
+          }}
         >
           Show All
         </Button>
