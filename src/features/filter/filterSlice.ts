@@ -8,7 +8,8 @@ export interface FilterState {
   categories: string[];
   materials: string[];
 }
-const initialState: FilterState = {
+
+export const defaultFilters: FilterState = {
   brand: [],
   color: [],
   size: [],
@@ -19,33 +20,20 @@ const initialState: FilterState = {
 
 const filterSlice = createSlice({
   name: 'filters',
-  initialState,
+  initialState: defaultFilters,
   reducers: {
-    setBrand: (state, action: PayloadAction<string[]>) => {
-      state.brand = action.payload;
-    },
-    setColor: (state, action: PayloadAction<string[]>) => {
-      state.color = action.payload;
-    },
-    setSize: (state, action: PayloadAction<string[]>) => {
-      state.size = action.payload;
-    },
-    setPriceRange: (state, action: PayloadAction<[number, number]>) => {
-      state.priceRange = action.payload;
+    setFilterField: <K extends keyof FilterState>(
+      state: FilterState,
+      action: PayloadAction<{ key: K; value: FilterState[K] }>,
+    ) => {
+      state[action.payload.key] = action.payload.value;
     },
     setFilters: (state, action: PayloadAction<FilterState>) => {
       return { ...state, ...action.payload };
     },
-    resetFilters: () => initialState,
+    resetFilters: () => defaultFilters,
   },
 });
 
-export const {
-  setBrand,
-  setColor,
-  setSize,
-  setPriceRange,
-  resetFilters,
-  setFilters,
-} = filterSlice.actions;
+export const { setFilterField, setFilters, resetFilters } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;
