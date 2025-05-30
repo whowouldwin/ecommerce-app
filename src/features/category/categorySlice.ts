@@ -7,6 +7,7 @@ interface CategoryState {
   loading: boolean;
   error: string | null;
   selectedCategoryKey: string | null;
+  categoriesLoaded: boolean;
 }
 
 const initialState: CategoryState = {
@@ -14,6 +15,7 @@ const initialState: CategoryState = {
   loading: false,
   error: null,
   selectedCategoryKey: null,
+  categoriesLoaded: false,
 };
 
 export const fetchCategories = createAsyncThunk(
@@ -41,14 +43,17 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.categoriesLoaded = false;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.categories = action.payload;
+        state.categoriesLoaded = true;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to load categories';
+        state.categoriesLoaded = false;
       });
   },
 });

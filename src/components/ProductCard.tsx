@@ -7,8 +7,10 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { useSelector } from 'react-redux';
 import { getLocalizedText } from '../utils/localization.ts';
 import { extractPriceInfo, formatPrice } from '../utils/price.ts';
+import { RootState } from '../store/store';
 
 type ProductCardProps = {
   product: ProductProjection;
@@ -17,6 +19,11 @@ type ProductCardProps = {
 const ProductCard = ({ product }: ProductCardProps) => {
   const cardBg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.600', 'gray.300');
+  const categoryBg = useColorModeValue('blue.100', 'blue.900');
+  const categoryColor = useColorModeValue('blue.800', 'blue.200');
+  const categories = useSelector(
+    (state: RootState) => state.category.categories,
+  );
 
   const imageUrl =
     product.masterVariant?.images?.[0]?.url ||
@@ -25,6 +32,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const { originalPrice, discountedPrice, currency } =
     extractPriceInfo(product);
+
+  const productCategories = product.categories || [];
+
+  const categoryNames = productCategories
+    .map((categoryRef) => {
+      const category = categories.find((cat) => cat.id === categoryRef.id);
+      return category ? getLocalizedText(category.name) : '';
+    })
+    .filter(Boolean);
 
   return (
     <Box
@@ -59,6 +75,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Text fontSize="sm" mb={2} color={textColor} noOfLines={2}>
           {getLocalizedText(product.description)}
         </Text>
+
+        {categoryNames.length > 0 && (
+          <Flex wrap="wrap" justify="center" gap={1} mb={2}>
+            {categoryNames.map((name, index) => (
+              <Box
+                key={index}
+                bg={categoryBg}
+                color={categoryColor}
+                px={2}
+                py={1}
+                borderRadius="md"
+                fontSize="xs"
+                fontWeight="medium"
+              >
+                {name}
+              </Box>
+            ))}
+          </Flex>
+        )}
 
         <Flex justify="center" align="center" gap={2} mb={4}>
           {discountedPrice ? (

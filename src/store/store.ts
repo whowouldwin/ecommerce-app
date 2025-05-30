@@ -2,6 +2,7 @@ import { configureStore, Middleware } from '@reduxjs/toolkit';
 import { userReducer } from '../features/user/userSlice';
 import { categoryReducer } from '../features/category/categorySlice';
 import { productReducer } from '../features/product/productSlice.ts';
+import { filterReducer } from '../features/filter/filterSlice.ts';
 
 const localStorageMiddleware: Middleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -14,6 +15,7 @@ export const store = configureStore({
     user: userReducer,
     category: categoryReducer,
     product: productReducer,
+    filters: filterReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware),
