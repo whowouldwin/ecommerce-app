@@ -6,8 +6,8 @@ export interface PriceInfo {
   currency: string;
 }
 
-export const extractPriceInfo = (product: ProductProjection): PriceInfo => {
-  const price = product.masterVariant?.prices?.[0];
+export const extractPriceInfo = (productData: ProductProjection): PriceInfo => {
+  const price = productData.masterVariant?.prices?.[0];
   return {
     originalPrice: price?.value?.centAmount ?? 0,
     discountedPrice: price?.discounted?.value?.centAmount,

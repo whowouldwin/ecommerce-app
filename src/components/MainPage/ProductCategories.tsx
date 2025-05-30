@@ -17,6 +17,7 @@ import {
   fetchCategories,
   setSelectedCategoryKey,
 } from '../../features/category/categorySlice';
+import { resetFilters } from '../../features/filter/filterSlice';
 import { AppDispatch, RootState } from '../../store/store';
 
 import flowerBA from '../../assets/flower-b-a.png';
@@ -149,8 +150,9 @@ const ProductCategories = () => {
                     fontWeight="medium"
                     alignSelf="flex-start"
                     onClick={() => {
+                      dispatch(resetFilters());
                       dispatch(setSelectedCategoryKey(cat.key ?? null));
-                      navigate('/products');
+                      navigate(`/products/${cat.key}`);
                     }}
                   >
                     See More
@@ -167,6 +169,7 @@ const ProductCategories = () => {
           colorScheme="blue"
           onClick={() => {
             dispatch(setSelectedCategoryKey(null));
+            dispatch(resetFilters());
             navigate('/products');
           }}
         >

@@ -42,7 +42,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/products"
+            path="/products/:categoryKey?"
             element={
               <Layout showAuthButtons>
                 <ProductsPage />
