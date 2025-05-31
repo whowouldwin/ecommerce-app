@@ -4,10 +4,6 @@ import {
   CheckboxGroup,
   Stack,
   Heading,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
   Button,
   Badge,
   Flex,
@@ -19,6 +15,10 @@ import {
   AccordionIcon,
   Select,
   Spinner,
+  RangeSlider,
+  RangeSliderTrack,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Category, ProductProjection } from '@commercetools/platform-sdk';
@@ -78,8 +78,8 @@ const ProductFilters = ({
     setLocalFilters({ ...localFilters, [key]: values });
   };
 
-  const handlePriceChange = (value: number) => {
-    setLocalFilters({ ...localFilters, priceRange: [0, value] });
+  const handlePriceRangeChange = (value: [number, number]) => {
+    setLocalFilters({ ...localFilters, priceRange: value });
   };
 
   const handleCategoryChange = (categoryKey: string | null) => {
@@ -196,7 +196,7 @@ const ProductFilters = ({
               })}
               {activeFilters.priceRange && (
                 <Badge colorScheme="purple">
-                  Price: ${activeFilters.priceRange[0]} - $
+                  Price: €{activeFilters.priceRange[0]} – €
                   {activeFilters.priceRange[1]}
                 </Badge>
               )}
@@ -250,21 +250,23 @@ const ProductFilters = ({
           </h2>
           <AccordionPanel pb={4}>
             <Text mb={2}>
-              Up to $
-              {localFilters.priceRange ? localFilters.priceRange[1] : 1000}
+              Price: €{localFilters.priceRange?.[0] ?? 0} – €
+              {localFilters.priceRange?.[1] ?? 100}
             </Text>
-            <Slider
-              aria-label="price-slider"
-              value={localFilters.priceRange?.[1] ?? 1000}
-              max={1000}
-              step={50}
-              onChange={handlePriceChange}
+            <RangeSlider
+              aria-label={['min', 'max']}
+              min={0}
+              max={100}
+              step={1}
+              value={localFilters.priceRange ?? [0, 100]}
+              onChange={handlePriceRangeChange}
             >
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
+              <RangeSliderTrack>
+                <RangeSliderFilledTrack />
+              </RangeSliderTrack>
+              <RangeSliderThumb index={0} />
+              <RangeSliderThumb index={1} />
+            </RangeSlider>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
