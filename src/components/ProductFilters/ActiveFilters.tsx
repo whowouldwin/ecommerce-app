@@ -37,7 +37,7 @@ const ActiveFilters = ({ filters, categories }: Props) => {
         const cat = categories.find((c) => c.id === id);
         return (
           <Badge key={id} colorScheme="cyan">
-            {getLocalizedText(cat?.name, 'en') || id}
+            {getLocalizedText(cat?.name, 'en-US') || id}
           </Badge>
         );
       })}

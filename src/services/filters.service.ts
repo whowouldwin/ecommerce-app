@@ -94,7 +94,7 @@ export const buildFilterQueryArgs = (
   const facets: string[] = [];
 
   if (filterParams.searchText) {
-    const language = filterParams.language || 'en';
+    const language = filterParams.language || 'en-US';
     queryArgs[`text.${language}`] = filterParams.searchText;
     queryArgs.fuzzy = true;
   }

@@ -7,6 +7,7 @@ export interface FilterState {
   priceRange: [number, number] | null;
   categories: string[];
   materials: string[];
+  searchText: string;
 }
 
 export const defaultFilters: FilterState = {
@@ -16,6 +17,7 @@ export const defaultFilters: FilterState = {
   priceRange: null,
   categories: [],
   materials: [],
+  searchText: '',
 };
 
 const filterSlice = createSlice({

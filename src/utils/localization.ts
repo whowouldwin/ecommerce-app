@@ -2,7 +2,7 @@ import { LocalizedString } from '@commercetools/platform-sdk';
 
 export const getLocalizedText = (
   text?: LocalizedString,
-  locale: string = 'en',
+  locale: string = 'en-US',
 ): string => {
   return (
     text?.[locale] ||

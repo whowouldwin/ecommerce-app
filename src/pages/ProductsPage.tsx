@@ -12,7 +12,13 @@ import {
   Flex,
   Button,
   ButtonGroup,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  Skeleton,
 } from '@chakra-ui/react';
+import { FaSearch } from 'react-icons/fa';
 import { fetchProducts } from '../features/product/productSlice';
 import {
   setFilters,
@@ -35,7 +41,11 @@ const ProductsPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const products = useSelector((state: RootState) => state.product.products);
+  const products = useSelector((state: RootState) =>
+    state.product.loading
+      ? state.product.previousProducts
+      : state.product.products,
+  );
   const loading = useSelector((state: RootState) => state.product.loading);
   const filters = useSelector((state: RootState) => state.filters);
   const selectedCategoryKey = useSelector(
@@ -50,6 +60,7 @@ const ProductsPage = () => {
 
   const [sortOption, setSortOption] = useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
   const productsPerPage = 12;
 
   const fetchProductsWithParams = () => {
@@ -58,6 +69,8 @@ const ProductsPage = () => {
         sort: sortOption,
         limit: productsPerPage,
         offset: (currentPage - 1) * productsPerPage,
+        searchText: filters.searchText,
+        language: 'en-US',
       }),
     );
   };
@@ -95,6 +108,7 @@ const ProductsPage = () => {
   const handleResetFilters = () => {
     setCurrentPage(1);
     setSortOption(undefined);
+    setSearchInput('');
     dispatch(resetFilters());
     dispatch(setSelectedCategoryKey(null));
   };
@@ -110,7 +124,7 @@ const ProductsPage = () => {
 
   const getCategoryName = (key: string): string => {
     const category = categories.find((cat) => cat.key === key);
-    return getLocalizedText(category?.name, 'en');
+    return getLocalizedText(category?.name, 'en-US');
   };
 
   return (
@@ -134,34 +148,80 @@ const ProductsPage = () => {
         </GridItem>
 
         <GridItem>
-          <Flex
-            justify="space-between"
-            align="center"
-            mb={4}
-            wrap="wrap"
-            gap={2}
-          >
-            <Box>
-              <ProductSort sortOption={sortOption} onChange={setSortOption} />
-            </Box>
-            <Text fontSize="sm" color="gray.500">
-              Showing {products.length} products
-            </Text>
+          <Flex direction="column" mb={4} gap={4}>
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FaSearch} color="gray.400" />
+              </InputLeftElement>
+              <Input
+                placeholder="Search products..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    dispatch(
+                      setFilters({ ...filters, searchText: searchInput }),
+                    );
+                    setCurrentPage(1);
+                  }
+                }}
+                borderRadius="md"
+                _focus={{
+                  borderColor: 'blue.500',
+                  boxShadow: '0 0 0 1px blue.500',
+                }}
+              />
+              <Button
+                ml={2}
+                onClick={() => {
+                  dispatch(setFilters({ ...filters, searchText: searchInput }));
+                  setCurrentPage(1);
+                }}
+                colorScheme="blue"
+                isDisabled={
+                  !searchInput.trim() || searchInput === filters.searchText
+                }
+              >
+                Find
+              </Button>
+            </InputGroup>
+
+            <Flex justify="space-between" align="center" wrap="wrap" gap={2}>
+              <Box>
+                <ProductSort sortOption={sortOption} onChange={setSortOption} />
+              </Box>
+              <Text fontSize="sm" color="gray.500">
+                Showing {products.length} products
+              </Text>
+            </Flex>
           </Flex>
 
-          {loading ? (
-            <Box textAlign="center" py={8}>
-              <Text>Updating products...</Text>
-            </Box>
-          ) : products.length === 0 ? (
+          {products.length === 0 && !loading ? (
             <Box textAlign="center" py={8}>
               <Text>No products found. Try adjusting your filters.</Text>
             </Box>
           ) : (
             <>
+              {loading && (
+                <Box textAlign="center" py={4}>
+                  <Text fontSize="sm" color="gray.500">
+                    Updating products...
+                  </Text>
+                </Box>
+              )}
+
               <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={6}>
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <Skeleton
+                    key={product.id}
+                    isLoaded={!loading}
+                    fadeDuration={0.3}
+                  >
+                    <ProductCard
+                      product={product}
+                      searchQuery={filters.searchText}
+                    />
+                  </Skeleton>
                 ))}
               </SimpleGrid>
 

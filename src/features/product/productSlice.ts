@@ -5,6 +5,7 @@ import { RootState } from '../../store/store';
 
 interface ProductState {
   products: ProductProjection[];
+  previousProducts: ProductProjection[];
   loading: boolean;
   error: string | null;
   isFiltering: boolean;
@@ -12,6 +13,7 @@ interface ProductState {
 
 const initialState: ProductState = {
   products: [],
+  previousProducts: [],
   loading: false,
   error: null,
   isFiltering: false,
@@ -22,6 +24,7 @@ export interface FetchProductsParams {
   limit?: number;
   offset?: number;
   searchText?: string;
+  language?: string;
 }
 
 export const fetchProducts = createAsyncThunk<
@@ -41,7 +44,7 @@ export const fetchProducts = createAsyncThunk<
     categories: categories.length > 0 ? categories : undefined,
     materials: materials.length > 0 ? materials : undefined,
     searchText: params?.searchText,
-    language: 'en',
+    language: 'en-US',
   };
 
   const res = await getProducts(
@@ -68,6 +71,7 @@ const productSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
+        state.previousProducts = state.products;
         state.loading = true;
         state.error = null;
       })
