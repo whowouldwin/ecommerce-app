@@ -8,15 +8,17 @@ import {
 } from '@chakra-ui/react';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useSelector } from 'react-redux';
+import HighlightedText from './HighlightedText';
 import { getLocalizedText } from '../utils/localization.ts';
 import { extractPriceInfo, formatPrice } from '../utils/price.ts';
 import { RootState } from '../store/store';
 
 type ProductCardProps = {
   product: ProductProjection;
+  searchQuery?: string;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
   const cardBg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.600', 'gray.300');
   const categoryBg = useColorModeValue('blue.100', 'blue.900');
@@ -69,12 +71,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
         flexDirection="column"
         flex="1"
       >
-        <Text fontWeight="bold" fontSize="md" mb={1}>
-          {getLocalizedText(product.name)}
-        </Text>
-        <Text fontSize="sm" mb={2} color={textColor} noOfLines={2}>
-          {getLocalizedText(product.description)}
-        </Text>
+        <HighlightedText
+          text={getLocalizedText(product.name)}
+          highlight={searchQuery}
+          fontWeight="bold"
+          fontSize="md"
+          mb={1}
+        />
+        <HighlightedText
+          text={getLocalizedText(product.description)}
+          highlight={searchQuery}
+          fontSize="sm"
+          color={textColor}
+          noOfLines={2}
+        />
 
         {categoryNames.length > 0 && (
           <Flex wrap="wrap" justify="center" gap={1} mb={2}>
