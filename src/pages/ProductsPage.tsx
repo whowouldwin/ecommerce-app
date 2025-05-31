@@ -10,7 +10,6 @@ import {
   GridItem,
   useColorModeValue,
   Flex,
-  Select,
   Button,
   ButtonGroup,
 } from '@chakra-ui/react';
@@ -28,6 +27,7 @@ import { AppDispatch, RootState } from '../store/store';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters/ProductFilters.tsx';
 import { getLocalizedText } from '../utils/localization';
+import ProductSort from '../components/ProductSort/ProductSort.tsx';
 
 const ProductsPage = () => {
   const headingColor = useColorModeValue('gray.900', 'white');
@@ -142,38 +142,7 @@ const ProductsPage = () => {
             gap={2}
           >
             <Box>
-              <Flex align="center" gap={2}>
-                <Text fontWeight="medium" fontSize="sm">
-                  Sort by:
-                </Text>
-                <Select
-                  value={sortOption || ''}
-                  onChange={(e) => setSortOption(e.target.value || undefined)}
-                  size="sm"
-                  width="200px"
-                  bg={sortOption ? 'blue.50' : 'white'}
-                  borderColor={sortOption ? 'blue.300' : 'gray.200'}
-                  _hover={{
-                    borderColor: sortOption ? 'blue.400' : 'gray.300',
-                  }}
-                >
-                  <option value="">Default</option>
-                  <option value="name.en-US asc">Name: A to Z</option>
-                  <option value="name.en-US desc">Name: Z to A</option>
-                  <option value="price asc">Price: Low to High</option>
-                  <option value="price desc">Price: High to Low</option>
-                </Select>
-                {sortOption && (
-                  <Button
-                    size="xs"
-                    colorScheme="blue"
-                    variant="ghost"
-                    onClick={() => setSortOption(undefined)}
-                  >
-                    Clear
-                  </Button>
-                )}
-              </Flex>
+              <ProductSort sortOption={sortOption} onChange={setSortOption} />
             </Box>
             <Text fontSize="sm" color="gray.500">
               Showing {products.length} products
