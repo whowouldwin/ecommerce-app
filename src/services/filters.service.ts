@@ -108,7 +108,7 @@ export const buildFilterQueryArgs = (
       filters.push(
         `variants.price.centAmount:range (${minCents} to ${maxCents})`,
       );
-      facets.push('variants.price.centAmount:range (0 to 10000)');
+      facets.push('variants.price.centAmount:range (0 to 100)');
     }
   }
 
