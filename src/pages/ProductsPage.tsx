@@ -32,11 +32,9 @@ import {
   setFilters,
   resetFilters,
   FilterState,
+  setFilterField,
 } from '../features/filter/filterSlice';
-import {
-  fetchCategories,
-  setSelectedCategoryKey,
-} from '../features/category/categorySlice';
+import { setSelectedCategoryKey } from '../features/category/categorySlice';
 import { AppDispatch, RootState } from '../store/store';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters/ProductFilters.tsx';
@@ -88,24 +86,24 @@ const ProductsPage = () => {
   };
 
   useEffect(() => {
-    if (!categoriesLoaded) dispatch(fetchCategories());
-  }, [dispatch, categoriesLoaded]);
+    if (!categoriesLoaded) return;
 
-  useEffect(() => {
-    if (!categoriesLoaded || !categoryKey) return;
+    const matchedCategory = categories.find((cat) => cat.key === categoryKey);
+    const categoryId = matchedCategory?.id ?? null;
+    const needUpdate = categoryId
+      ? filters.categories[0] !== categoryId || filters.categories.length !== 1
+      : filters.categories.length > 0;
 
-    const category = categories.find((cat) => cat.key === categoryKey);
-    const categoryId = category?.id;
-
-    if (
-      categoryId &&
-      (!filters.categories.includes(categoryId) ||
-        filters.categories.length !== 1)
-    ) {
-      dispatch(setFilters({ ...filters, categories: [categoryId] }));
+    if (needUpdate) {
+      dispatch(
+        setFilters({
+          ...filters,
+          categories: categoryId ? [categoryId] : [],
+        }),
+      );
     }
 
-    dispatch(setSelectedCategoryKey(categoryKey));
+    dispatch(setSelectedCategoryKey(categoryKey ?? null));
   }, [categoryKey, categoriesLoaded, categories]);
 
   useEffect(() => {
@@ -127,6 +125,8 @@ const ProductsPage = () => {
 
   const handleCategoryChange = (newKey: string | null) => {
     setCurrentPage(1);
+    setSearchInput('');
+    dispatch(setFilterField({ key: 'searchText', value: '' }));
     if (newKey) {
       navigate(`/products/${newKey}`);
     } else {
@@ -183,6 +183,7 @@ const ProductsPage = () => {
               onResetFilters={handleResetFilters}
               categories={categories}
               onCategoryChange={handleCategoryChange}
+              selectedCategoryKey={selectedCategoryKey}
             />
           </DrawerBody>
         </DrawerContent>
@@ -197,6 +198,7 @@ const ProductsPage = () => {
             onResetFilters={handleResetFilters}
             categories={categories}
             onCategoryChange={handleCategoryChange}
+            selectedCategoryKey={selectedCategoryKey}
           />
         </GridItem>
 

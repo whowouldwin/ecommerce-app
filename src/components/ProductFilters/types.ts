@@ -8,4 +8,5 @@ export interface ProductFiltersProps {
   onResetFilters: () => void;
   categories: Category[];
   onCategoryChange: (categoryKey: string | null) => void;
+  selectedCategoryKey: string | null;
 }
