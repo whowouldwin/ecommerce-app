@@ -26,6 +26,7 @@ const ProductFilters = ({
   onResetFilters,
   categories,
   onCategoryChange,
+  selectedCategoryKey,
 }: ProductFiltersProps) => {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     brands: [],
@@ -75,10 +76,23 @@ const ProductFilters = ({
 
   const applyFilters = () => {
     onFilterChange(localFilters);
+    if (localFilters.categories.length === 0) {
+      if (
+        categories.find((c) => c.key === null) ||
+        selectedCategoryKey !== null
+      ) {
+        onCategoryChange(null);
+      }
+      return;
+    }
     const selected = categories.find(
       (c) => c.id === localFilters.categories[0],
     );
-    onCategoryChange(selected?.key ?? null);
+    const newCategoryKey = selected?.key ?? null;
+
+    if (newCategoryKey !== selectedCategoryKey) {
+      onCategoryChange(newCategoryKey);
+    }
   };
 
   const resetFilters = () => {
