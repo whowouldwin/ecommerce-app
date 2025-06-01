@@ -53,6 +53,12 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
       display="flex"
       flexDirection="column"
       height="100%"
+      transition="transform 0.2s ease, box-shadow 0.2s ease"
+      cursor="pointer"
+      _hover={{
+        transform: 'scale(1.02)',
+        boxShadow: 'lg',
+      }}
     >
       <Box h="200px" w="100%" overflow="hidden">
         <Image

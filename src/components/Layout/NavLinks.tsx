@@ -4,6 +4,7 @@ import { useColorModeValue } from '@chakra-ui/react';
 
 const navLinks = [
   { label: 'Home', to: '/' },
+  { label: 'Products', to: '/products' },
   { label: 'About Us', to: '/about' },
   { label: 'Delivery', to: '/delivery' },
 ];

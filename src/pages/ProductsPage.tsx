@@ -17,8 +17,16 @@ import {
   InputLeftElement,
   Icon,
   Skeleton,
+  useDisclosure,
+  IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from '@chakra-ui/react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaFilter } from 'react-icons/fa';
 import { fetchProducts } from '../features/product/productSlice';
 import {
   setFilters,
@@ -34,6 +42,8 @@ import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters/ProductFilters.tsx';
 import { getLocalizedText } from '../utils/localization';
 import ProductSort from '../components/ProductSort/ProductSort.tsx';
+import CategoryNavigation from '../components/CategoryNavigation/CategoryNavigation.tsx';
+import ActiveFilters from '../components/ProductFilters/ActiveFilters.tsx';
 
 const ProductsPage = () => {
   const headingColor = useColorModeValue('gray.900', 'white');
@@ -62,6 +72,8 @@ const ProductsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const productsPerPage = 12;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fetchProductsWithParams = () => {
     dispatch(
@@ -129,14 +141,55 @@ const ProductsPage = () => {
 
   return (
     <Box maxW="container.xl" mx="auto" px={4} py={10}>
-      <Heading mb={6} color={headingColor}>
+      <Heading mb={4} color={headingColor}>
         {selectedCategoryKey
           ? `Products in "${getCategoryName(selectedCategoryKey)}"`
           : 'All Products'}
       </Heading>
 
+      <CategoryNavigation
+        categories={categories}
+        selectedCategoryKey={selectedCategoryKey}
+        onCategoryChange={handleCategoryChange}
+      />
+
+      <Box mb={4} display={{ base: 'block', md: 'none' }}>
+        <Flex justify="space-between" align="center" mb={2}>
+          <Heading size="sm">Active Filters</Heading>
+          <IconButton
+            aria-label="Open filters"
+            icon={<FaFilter />}
+            size="sm"
+            onClick={onOpen}
+            colorScheme="blue"
+          />
+        </Flex>
+        <ActiveFilters filters={filters} categories={categories} />
+      </Box>
+
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Filters</DrawerHeader>
+          <DrawerBody>
+            <ProductFilters
+              products={products}
+              onFilterChange={(newFilters) => {
+                handleFilterChange(newFilters);
+                onClose();
+              }}
+              activeFilters={filters}
+              onResetFilters={handleResetFilters}
+              categories={categories}
+              onCategoryChange={handleCategoryChange}
+            />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
       <Grid templateColumns={{ base: '1fr', md: '250px 1fr' }} gap={6}>
-        <GridItem>
+        <GridItem display={{ base: 'none', md: 'block' }}>
           <ProductFilters
             products={products}
             onFilterChange={handleFilterChange}
@@ -149,30 +202,36 @@ const ProductsPage = () => {
 
         <GridItem>
           <Flex direction="column" mb={4} gap={4}>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Icon as={FaSearch} color="gray.400" />
-              </InputLeftElement>
-              <Input
-                placeholder="Search products..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    dispatch(
-                      setFilters({ ...filters, searchText: searchInput }),
-                    );
-                    setCurrentPage(1);
-                  }
-                }}
-                borderRadius="md"
-                _focus={{
-                  borderColor: 'blue.500',
-                  boxShadow: '0 0 0 1px blue.500',
-                }}
-              />
+            <Flex
+              direction={{ base: 'column', sm: 'row' }}
+              gap={2}
+              align="stretch"
+            >
+              <InputGroup flex="1">
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaSearch} color="gray.400" />
+                </InputLeftElement>
+                <Input
+                  placeholder="Search products..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      dispatch(
+                        setFilters({ ...filters, searchText: searchInput }),
+                      );
+                      setCurrentPage(1);
+                    }
+                  }}
+                  borderRadius="md"
+                  _focus={{
+                    borderColor: 'blue.500',
+                    boxShadow: '0 0 0 1px blue.500',
+                  }}
+                />
+              </InputGroup>
+
               <Button
-                ml={2}
                 onClick={() => {
                   dispatch(setFilters({ ...filters, searchText: searchInput }));
                   setCurrentPage(1);
@@ -181,14 +240,22 @@ const ProductsPage = () => {
                 isDisabled={
                   !searchInput.trim() || searchInput === filters.searchText
                 }
+                size={{ base: 'sm', sm: 'md' }}
+                width={{ base: '100%', sm: 'auto' }}
               >
                 Find
               </Button>
-            </InputGroup>
+            </Flex>
 
             <Flex justify="space-between" align="center" wrap="wrap" gap={2}>
               <Box>
-                <ProductSort sortOption={sortOption} onChange={setSortOption} />
+                <ProductSort
+                  sortOption={sortOption}
+                  onChange={(value) => {
+                    setSortOption(value);
+                    setCurrentPage(1);
+                  }}
+                />
               </Box>
               <Text fontSize="sm" color="gray.500">
                 Showing {products.length} products

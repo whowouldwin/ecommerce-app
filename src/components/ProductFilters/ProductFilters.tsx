@@ -5,6 +5,7 @@ import {
   Select,
   Button,
   Heading,
+  Stack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { ProductFiltersProps } from './types';
@@ -87,19 +88,23 @@ const ProductFilters = ({
   };
 
   return (
-    <Box p={4} w="250px">
-      <Heading size="md" mb={4}>
+    <Box p={{ base: 3, md: 4 }} w="100%">
+      <Heading size="md" mb={{ base: 3, md: 4 }}>
         Filters
       </Heading>
 
-      <Box mb={4}>
+      <Box mb={{ base: 3, md: 4 }}>
         <Heading size="sm" mb={2}>
           Active Filters
         </Heading>
         <ActiveFilters filters={activeFilters} categories={categories} />
       </Box>
 
-      <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]} mb={4}>
+      <Accordion
+        allowMultiple
+        defaultIndex={[0, 1, 2, 3]}
+        mb={{ base: 3, md: 4 }}
+      >
         <AccordionItem>
           <Select
             value={
@@ -107,6 +112,7 @@ const ProductFilters = ({
                 ?.key ?? ''
             }
             onChange={(e) => handleCategoryChange(e.target.value || null)}
+            size={{ base: 'sm', md: 'md' }}
           >
             <option value="">All Categories</option>
             {categories.map((c) => (
@@ -156,27 +162,27 @@ const ProductFilters = ({
         />
       </Accordion>
 
-      <Button
-        mt={2}
-        colorScheme="teal"
-        onClick={applyFilters}
-        width="100%"
-        mb={2}
-        isDisabled={!filtersChanged}
-        variant={filtersChanged ? 'solid' : 'outline'}
-      >
-        Apply Filters
-      </Button>
+      <Stack spacing={2} align="start">
+        <Button
+          colorScheme="teal"
+          onClick={applyFilters}
+          isDisabled={!filtersChanged}
+          variant={filtersChanged ? 'solid' : 'outline'}
+          size={{ base: 'sm', md: 'md' }}
+        >
+          Apply Filters
+        </Button>
 
-      <Button
-        colorScheme="red"
-        onClick={resetFilters}
-        width="100%"
-        isDisabled={isResetDisabled}
-        variant={isResetDisabled ? 'outline' : 'solid'}
-      >
-        Reset All Filters
-      </Button>
+        <Button
+          colorScheme="red"
+          onClick={resetFilters}
+          isDisabled={isResetDisabled}
+          variant={isResetDisabled ? 'outline' : 'solid'}
+          size={{ base: 'sm', md: 'md' }}
+        >
+          Reset All Filters
+        </Button>
+      </Stack>
     </Box>
   );
 };

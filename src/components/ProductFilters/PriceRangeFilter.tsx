@@ -20,15 +20,15 @@ interface Props {
 const PriceRangeFilter = ({ value, onChange }: Props) => (
   <AccordionItem>
     <h2>
-      <AccordionButton>
+      <AccordionButton py={{ base: 2, md: 3 }}>
         <Box flex="1" textAlign="left">
-          <Heading size="sm">Price Range</Heading>
+          <Heading size={{ base: 'xs', md: 'sm' }}>Price Range</Heading>
         </Box>
         <AccordionIcon />
       </AccordionButton>
     </h2>
-    <AccordionPanel pb={4}>
-      <Text mb={2}>
+    <AccordionPanel pb={{ base: 3, md: 4 }}>
+      <Text mb={{ base: 1, md: 2 }} fontSize={{ base: 'sm', md: 'md' }}>
         Price: €{value[0].toFixed(2)} – €{value[1].toFixed(2)}
       </Text>
       <RangeSlider
@@ -38,6 +38,7 @@ const PriceRangeFilter = ({ value, onChange }: Props) => (
         step={1}
         value={value}
         onChange={onChange}
+        size={{ base: 'sm', md: 'md' }}
       >
         <RangeSliderTrack>
           <RangeSliderFilledTrack />
