@@ -33,24 +33,28 @@ const FilterCheckboxGroup = ({
 }: Props) => (
   <AccordionItem>
     <h2>
-      <AccordionButton>
+      <AccordionButton py={{ base: 2, md: 3 }}>
         <Box flex="1" textAlign="left">
-          <Heading size="sm">{label}</Heading>
+          <Heading size={{ base: 'xs', md: 'sm' }}>{label}</Heading>
         </Box>
         <AccordionIcon />
       </AccordionButton>
     </h2>
-    <AccordionPanel pb={4}>
+    <AccordionPanel pb={{ base: 3, md: 4 }}>
       {loading ? (
         <Flex justify="center" py={2}>
           <Spinner size="sm" />
         </Flex>
       ) : (
         <CheckboxGroup value={values} onChange={onChange}>
-          <Stack spacing={1}>
+          <Stack spacing={{ base: 0.5, md: 1 }}>
             {options.length > 0 ? (
               options.map((value) => (
-                <Checkbox key={value} value={value}>
+                <Checkbox
+                  key={value}
+                  value={value}
+                  size={{ base: 'sm', md: 'md' }}
+                >
                   {getLocalizedText({ en: value })}
                 </Checkbox>
               ))
