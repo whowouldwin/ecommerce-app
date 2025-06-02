@@ -26,7 +26,32 @@ export interface UserState {
   status: RequestStatus;
 }
 
-const initialState: UserState = {
+async function getUserDataFromLastSession() {
+  const response = await retryAuthWithRefresh();
+  if (response && response.statusCode === 200) {
+    return response.body;
+  }
+}
+
+const getUserData = await getUserDataFromLastSession();
+
+let parsedUserState;
+if (getUserData) {
+  parsedUserState = {
+    isAuthenticated: true,
+    email: getUserData.email || null,
+    firstName: getUserData.firstName || null,
+    lastName: getUserData.lastName || null,
+    dateOfBirth: getUserData.dateOfBirth || null,
+    addresses: getUserData.addresses,
+    defaultBillingAddressId: getUserData.defaultBillingAddressId || null,
+    defaultShippingAddressId: getUserData.defaultShippingAddressId || null,
+    version: getUserData.version || null,
+    status: RequestStatus.IDLE,
+  };
+}
+
+const initialState: UserState = parsedUserState || {
   isAuthenticated: false,
   email: null,
   firstName: null,
