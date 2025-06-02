@@ -4,10 +4,11 @@ import { Provider } from 'react-redux';
 import Layout from './components/Layout/Layout';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import RegisterPage from './pages/RegisterPage.tsx';
 import AboutPage from './pages/AboutPage';
 import DeliveryPage from './pages/DeliveryPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProfilePage from './pages/ProfilePage.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
 import ProductsPage from './pages/ProductsPage.tsx';
@@ -69,6 +70,7 @@ const App: React.FC = () => {
               </Layout>
             }
           />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

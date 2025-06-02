@@ -26,6 +26,7 @@ const theme = extendTheme({
       100: '#393126',
       200: '#2F281E',
       300: '#101828',
+      400: '#E9E9F2',
     },
     secondary: '#D6850C',
     accent: '#FFB2A0',
@@ -50,6 +51,27 @@ const theme = extendTheme({
     body: `'Poppins', sans-serif`,
   },
   components: {
+    Checkbox: {
+      baseStyle: {
+        control: {
+          bg: mode('white', 'gray.700'),
+          borderColor: mode('gray.300', 'gray.600'),
+
+          _checked: {
+            bg: 'brand.500',
+            borderColor: 'brand.500',
+            _hover: {
+              bg: 'brand.600',
+              borderColor: 'brand.600',
+            },
+          },
+          _hover: {
+            bg: mode('brand.100', 'gray.600'),
+            borderColor: mode('brand.300', 'gray.500'),
+          },
+        },
+      },
+    },
     Button: {
       baseStyle: {
         fontWeight: 'bold',

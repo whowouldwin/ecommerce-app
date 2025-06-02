@@ -49,6 +49,7 @@ export const logout = async () => {
 };
 
 export const registerCustomer = async (data: MyCustomerDraft) => {
+  console.log('registerCustomer', data);
   return await apiClient
     .getApiRoot()
     .me()
@@ -59,6 +60,10 @@ export const registerCustomer = async (data: MyCustomerDraft) => {
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
+        dateOfBirth: data.dateOfBirth,
+        addresses: data.addresses,
+        defaultBillingAddress: data.defaultBillingAddress,
+        defaultShippingAddress: data.defaultShippingAddress,
       },
     })
     .execute();
