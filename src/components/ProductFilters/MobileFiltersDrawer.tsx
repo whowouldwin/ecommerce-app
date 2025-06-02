@@ -20,6 +20,7 @@ interface MobileFiltersDrawerProps {
   onResetFilters: () => void;
   categories: Category[];
   onCategoryChange: (categoryKey: string | null) => void;
+  selectedCategoryKey: string | null;
 }
 
 const MobileFiltersDrawer = ({
@@ -31,6 +32,7 @@ const MobileFiltersDrawer = ({
   onResetFilters,
   categories,
   onCategoryChange,
+  selectedCategoryKey,
 }: MobileFiltersDrawerProps) => {
   return (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -49,6 +51,7 @@ const MobileFiltersDrawer = ({
             onResetFilters={onResetFilters}
             categories={categories}
             onCategoryChange={onCategoryChange}
+            selectedCategoryKey={selectedCategoryKey}
           />
         </DrawerBody>
       </DrawerContent>
