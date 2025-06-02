@@ -2,23 +2,19 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
-  FormControl,
-  FormLabel,
   Heading,
-  Input,
   Text,
   VStack,
   useToast,
   useColorModeValue,
-  InputGroup,
-  InputRightElement,
 } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
 import { loginUser } from '../features/user/userSlice';
 import CustomToast from '../components/CustomToast';
+import FormInput from '../components/form/FormInput';
+import { validateEmail, validatePassword } from '../utils/validation';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,44 +26,24 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
-  const handleEmailChange = (value: string) => {
+  const isFormValid =
+    email.trim() !== '' &&
+    password.trim() !== '' &&
+    !emailError &&
+    !passwordError;
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setEmail(value);
-    const trimmed = value.trim();
-
-    if (!trimmed) {
-      setEmailError('Email is required');
-    } else if (trimmed !== value) {
-      setEmailError('No leading or trailing spaces allowed');
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
-      setEmailError('Enter a valid email address');
-    } else {
-      setEmailError('');
-    }
+    setEmailError(validateEmail(value));
   };
 
-  const handlePasswordChange = (value: string) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setPassword(value);
-    const trimmed = value.trim();
-
-    if (!trimmed) {
-      setPasswordError('Password is required');
-    } else if (trimmed !== value) {
-      setPasswordError('No leading or trailing spaces allowed');
-    } else if (trimmed.length < 8) {
-      setPasswordError('Password must be at least 8 characters');
-    } else if (!/[A-Z]/.test(trimmed)) {
-      setPasswordError('At least one uppercase letter required');
-    } else if (!/[a-z]/.test(trimmed)) {
-      setPasswordError('At least one lowercase letter required');
-    } else if (!/[0-9]/.test(trimmed)) {
-      setPasswordError('At least one number required');
-    } else {
-      setPasswordError('');
-    }
+    setPasswordError(validatePassword(value));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -127,49 +103,30 @@ const LoginPage: React.FC = () => {
           Sign In to FLR
         </Heading>
 
-        <FormControl isRequired isInvalid={!!emailError}>
-          <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => handleEmailChange(e.target.value)}
-          />
-          {emailError && (
-            <Text color="red.500" fontSize="sm" mt={1} fontWeight="medium">
-              {emailError}
-            </Text>
-          )}
-        </FormControl>
+        <FormInput
+          label="Email"
+          name="email"
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          error={emailError}
+        />
 
-        <FormControl isRequired isInvalid={!!passwordError}>
-          <FormLabel>Password</FormLabel>
-          <InputGroup>
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => handlePasswordChange(e.target.value)}
-              pr="4.5rem"
-            />
-            <InputRightElement width="3rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => setShowPassword(!showPassword)}
-                variant="ghost"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          {passwordError && (
-            <Text color="red.500" fontSize="sm" mt={1} fontWeight="medium">
-              {passwordError}
-            </Text>
-          )}
-        </FormControl>
+        <FormInput
+          label="Password"
+          name="password"
+          value={password}
+          onChange={handlePasswordChange}
+          error={passwordError}
+          showToggle
+        />
 
-        <Button colorScheme="blue" type="submit" width="full">
+        <Button
+          colorScheme="blue"
+          type="submit"
+          width="full"
+          isDisabled={!isFormValid}
+        >
           Sign In
         </Button>
         <Text fontSize="sm">

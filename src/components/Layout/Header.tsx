@@ -14,6 +14,7 @@ import { useAppSelector } from '../../store/hooks';
 import { selectUser } from '../../features/user/userSlice';
 import LogoBrand from './LogoBrand.tsx';
 import AuthButtons from './AuthButtons.tsx';
+import ProfileIconButton from './ProfileIconButton';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,6 +53,7 @@ const Header = () => {
 
             <Flex align="center" gap={3} mt={{ base: 3, md: 0 }}>
               {!isNarrow && <AuthButtons />}
+              <ProfileIconButton user={user} />
               <ThemeToggle />
             </Flex>
           </Flex>
