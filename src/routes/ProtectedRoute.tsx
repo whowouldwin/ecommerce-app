@@ -17,10 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { isAuthenticated, status } = useAppSelector(selectUser);
   const location = useLocation();
 
-  if (
-    (isAuthenticated || status === RequestStatus.LOADING) &&
-    authenticationRequired
-  ) {
+  if (status === RequestStatus.LOADING && authenticationRequired) {
     return (
       <Center h="100vh">
         <Spinner size="xl" color="blue.500" thickness="4px" />

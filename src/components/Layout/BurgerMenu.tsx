@@ -9,9 +9,6 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
-import { logoutUser } from '../../features/user/userSlice';
 import NavLinks from './NavLinks';
 import AuthButtons from './AuthButtons';
 
@@ -22,14 +19,7 @@ interface BurgerMenuProps {
   showAuthButtons?: boolean;
 }
 
-const BurgerMenu = ({
-  isOpen,
-  onClose,
-  isLoggedIn,
-  showAuthButtons,
-}: BurgerMenuProps) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+const BurgerMenu = ({ isOpen, onClose, showAuthButtons }: BurgerMenuProps) => {
   return (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
       <DrawerOverlay />
@@ -49,16 +39,9 @@ const BurgerMenu = ({
             </VStack>
             <Box pt={4} borderTop="1px solid" borderColor="gray.200">
               <AuthButtons
-                isLoggedIn={isLoggedIn}
                 isVertical
                 onClose={onClose}
                 showAuthButtons={showAuthButtons}
-                onLogout={() =>
-                  dispatch(logoutUser())
-                    .unwrap()
-                    .then(() => navigate('/'))
-                    .catch(console.error)
-                }
               />
             </Box>
           </Box>
