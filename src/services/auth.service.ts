@@ -49,7 +49,7 @@ export const logout = async () => {
 };
 
 export const registerCustomer = async (data: MyCustomerDraft) => {
-  console.log('registerCustomer', data);
+  // console.log('registerCustomer', data);
   return await apiClient
     .getApiRoot()
     .me()

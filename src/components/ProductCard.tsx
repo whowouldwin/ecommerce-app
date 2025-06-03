@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import HighlightedText from './HighlightedText';
 import { getLocalizedText } from '../utils/localization.ts';
 import { extractPriceInfo, formatPrice } from '../utils/price.ts';
@@ -26,6 +27,7 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
   const categories = useSelector(
     (state: RootState) => state.category.categories,
   );
+  const navigate = useNavigate();
 
   const imageUrl =
     product.masterVariant?.images?.[0]?.url ||
@@ -55,6 +57,9 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
       height="100%"
       transition="transform 0.2s ease, box-shadow 0.2s ease"
       cursor="pointer"
+      onClick={() => {
+        navigate(`/product/${product.id}`);
+      }}
       _hover={{
         transform: 'scale(1.02)',
         boxShadow: 'lg',

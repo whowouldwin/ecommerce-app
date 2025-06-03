@@ -86,13 +86,13 @@ export const AddressSection: React.FC = () => {
   const handleBillingChange = (id: string) => {
     setDefaultBillingId(id);
     dispatch(updateDefaultAddress({ addressId: id, type: 'billing' }));
-    console.log('Set default billing address:', id);
+    // console.log('Set default billing address:', id);
   };
 
   const handleShippingChange = (id: string) => {
     setDefaultShippingId(id);
     dispatch(updateDefaultAddress({ addressId: id, type: 'shipping' }));
-    console.log('Set default shipping address:', id);
+    // console.log('Set default shipping address:', id);
   };
 
   const {

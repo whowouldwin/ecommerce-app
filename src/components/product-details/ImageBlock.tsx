@@ -74,6 +74,7 @@ const ImageBlock: FC<ImageBlockProps> = ({
           opacity={showImage ? 1 : 0}
           transition="opacity 0.3s ease-in-out"
           borderRadius="sm"
+          cursor={typeBlock === 'base' ? 'pointer' : 'default'}
           onClick={() => {
             if (typeBlock === 'base') callBack(imageIndex, 'open');
           }}
