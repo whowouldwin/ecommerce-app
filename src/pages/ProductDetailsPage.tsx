@@ -21,10 +21,8 @@ import {
   ModalOverlay,
   Modal,
   useDisclosure,
-  IconButton,
 } from '@chakra-ui/react';
 import { Product, Image as ImageSDK } from '@commercetools/platform-sdk';
-import { SmallCloseIcon } from '@chakra-ui/icons';
 import { getProduct } from '../services';
 import ImageBlock from '../components/product-details/ImageBlock.tsx';
 import noImage from '../assets/no-image-card.jpg';
@@ -66,10 +64,10 @@ const ProductDetailsPage: FC = () => {
 
   useEffect(() => {
     if (id) {
-      console.log(id);
+      // console.log(id);
       getProduct(id)
         .then((data) => {
-          console.log('data.body', data.body);
+          // console.log('data.body', data.body);
           const priceObj =
             data.body.masterData.current.masterVariant.prices?.[0];
           const price = priceObj?.value?.centAmount
@@ -87,22 +85,21 @@ const ProductDetailsPage: FC = () => {
             : null;
 
           const currencyCode = priceObj?.value?.currencyCode || 'EUR';
-          setState({
-            ...state,
+          setState((prevState) => ({
+            ...prevState,
             isLoading: false,
             productData: data.body,
             productPrise: price,
             productPriseWithDiscount: discountedPrice,
             currencyCode,
-          });
+          }));
         })
         .catch((error) => {
-          console.log('error');
-          setState({
-            ...state,
+          setState((prevState) => ({
+            ...prevState,
             isLoading: false,
             errorMessage: error.body.message,
-          });
+          }));
         });
     }
   }, [id]);
@@ -159,8 +156,8 @@ const ProductDetailsPage: FC = () => {
     imageIndexFromChild: number,
     action: 'open' | 'close',
   ) => {
-    console.log('imageIndexFromChild', imageIndexFromChild);
-    console.log('imageIndex', imageIndex);
+    // console.log('imageIndexFromChild', imageIndexFromChild);
+    // console.log('imageIndex', imageIndex);
     if (imageIndex !== imageIndexFromChild) {
       setImageIndex(imageIndexFromChild);
     }
@@ -217,19 +214,6 @@ const ProductDetailsPage: FC = () => {
                     imageIndexProps={imageIndex}
                     callBack={stateImageBlock}
                     typeBlock="modal"
-                  />
-                  <IconButton
-                    icon={<SmallCloseIcon />}
-                    position="absolute"
-                    right="0"
-                    top="10%"
-                    onClick={() => {
-                      onClose();
-                    }}
-                    aria-label="Next image"
-                    variant="ghost"
-                    color="white"
-                    zIndex="1"
                   />
                 </ModalBody>
               </ModalContent>

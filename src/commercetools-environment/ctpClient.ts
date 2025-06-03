@@ -2,8 +2,8 @@ import {
   type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
   ClientBuilder,
-  LoggerMiddlewareOptions,
-  MiddlewareResponse,
+  // LoggerMiddlewareOptions,
+  // MiddlewareResponse,
   PasswordAuthMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
   UserAuthOptions,
@@ -18,11 +18,11 @@ export const authHost: string = import.meta.env.VITE_AUTH_HOST;
 export const apiHost: string = import.meta.env.VITE_API_HOST;
 export const scopes: string[] = [import.meta.env.VITE_SCOPE];
 
-const loggerMiddlewareOptions: LoggerMiddlewareOptions = {
-  loggerFn: (response: MiddlewareResponse) => {
-    console.log('Response is: ', response);
-  },
-};
+// const loggerMiddlewareOptions: LoggerMiddlewareOptions = {
+//   loggerFn: (response: MiddlewareResponse) => {
+//     console.log('Response is: ', response);
+//   },
+// };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: apiHost,
@@ -56,11 +56,13 @@ export function getCtpClientWithRefreshTokenFlow(refreshToken: string) {
 }
 
 export function getCtpClientCredentialsFlow() {
-  return new ClientBuilder()
-    .withClientCredentialsFlow(defaultMiddlewareOptions)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware(loggerMiddlewareOptions)
-    .build();
+  return (
+    new ClientBuilder()
+      .withClientCredentialsFlow(defaultMiddlewareOptions)
+      .withHttpMiddleware(httpMiddlewareOptions)
+      // .withLoggerMiddleware(loggerMiddlewareOptions)
+      .build()
+  );
 }
 
 export function getCtpClientAnonymousFlow() {
