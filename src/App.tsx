@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
 import ProductsPage from './pages/ProductsPage.tsx';
+import ProductDetailsPage from './pages/ProductDetailsPage.tsx';
 
 const App: React.FC = () => {
   return (
@@ -47,6 +48,14 @@ const App: React.FC = () => {
             element={
               <Layout showAuthButtons>
                 <ProductsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <Layout showAuthButtons>
+                <ProductDetailsPage />
               </Layout>
             }
           />

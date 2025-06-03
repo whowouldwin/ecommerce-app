@@ -25,3 +25,7 @@ export const getProducts = async (
     .get({ queryArgs })
     .execute();
 };
+
+export const getProduct = (id: string) => {
+  return apiClient.getApiRoot().products().withId({ ID: id }).get().execute();
+};
