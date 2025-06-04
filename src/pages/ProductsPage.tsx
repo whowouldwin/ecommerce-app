@@ -34,7 +34,10 @@ import {
   FilterState,
   setFilterField,
 } from '../features/filter/filterSlice';
-import { setSelectedCategoryKey } from '../features/category/categorySlice';
+import {
+  fetchCategories,
+  setSelectedCategoryKey,
+} from '../features/category/categorySlice';
 import { AppDispatch, RootState } from '../store/store';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters/ProductFilters.tsx';
@@ -84,6 +87,12 @@ const ProductsPage = () => {
       }),
     );
   };
+
+  useEffect(() => {
+    if (!categoriesLoaded) {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesLoaded]);
 
   useEffect(() => {
     if (!categoriesLoaded) return;
