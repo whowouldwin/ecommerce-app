@@ -6,11 +6,7 @@ import {
   Heading,
   Stack,
   VStack,
-  Text,
-  HStack,
-  Icon,
 } from '@chakra-ui/react';
-import { ChevronRightIcon } from '@chakra-ui/icons';
 import { JSX, useEffect, useState } from 'react';
 import { Category } from '@commercetools/platform-sdk';
 import { ProductFiltersProps } from './types';
@@ -19,11 +15,11 @@ import {
   getFilterOptions,
   FilterOptions,
 } from '../../services/filters.service';
-import { getLocalizedText } from '../../utils/localization';
 
 import FilterCheckboxGroup from './FilterCheckboxGroup';
 import PriceRangeFilter from './PriceRangeFilter';
 import ActiveFilters from './ActiveFilters';
+import CategoryItem from './CategoryItem.tsx';
 
 type CategoryWithChildren = Category & { children: CategoryWithChildren[] };
 
@@ -46,29 +42,16 @@ const renderCategoryTree = (
   selectedIds: string[],
   onSelect: (id: string) => void,
   level = 0,
-): JSX.Element[] => {
-  return nodes.map((node) => (
-    <Box key={node.id} pl={level * 4} py={1}>
-      <HStack
-        spacing={2}
-        cursor="pointer"
-        onClick={() => onSelect(node.id)}
-        _hover={{ bg: 'gray.100' }}
-        w="full"
-      >
-        {level > 0 && <Icon as={ChevronRightIcon} boxSize={3} />}
-        <Text
-          fontWeight={selectedIds.includes(node.id) ? 'bold' : 'normal'}
-          color={selectedIds.includes(node.id) ? 'blue.500' : 'gray.800'}
-        >
-          {getLocalizedText(node.name, 'en-US')}
-        </Text>
-      </HStack>
-      {node.children.length > 0 &&
-        renderCategoryTree(node.children, selectedIds, onSelect, level + 1)}
-    </Box>
+): JSX.Element[] =>
+  nodes.map((node) => (
+    <CategoryItem
+      key={node.id}
+      node={node}
+      selectedIds={selectedIds}
+      onSelect={onSelect}
+      level={level}
+    />
   ));
-};
 
 const ProductFilters = ({
   onFilterChange,
