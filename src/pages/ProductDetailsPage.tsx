@@ -73,14 +73,14 @@ const ProductDetailsPage: FC = () => {
           const price = priceObj?.value?.centAmount
             ? (
                 priceObj.value.centAmount /
-                (10 * priceObj.value.fractionDigits)
+                10 ** priceObj.value.fractionDigits
               ).toFixed(priceObj.value.fractionDigits)
             : null;
 
           const discountedPrice = priceObj?.discounted?.value?.centAmount
             ? (
                 priceObj.discounted.value.centAmount /
-                (10 * priceObj?.discounted.value.fractionDigits)
+                10 ** priceObj?.discounted.value.fractionDigits
               ).toFixed(priceObj?.discounted.value.fractionDigits)
             : null;
 
