@@ -91,12 +91,8 @@ const ProductsPage = () => {
   useEffect(() => {
     if (!categoriesLoaded) {
       dispatch(fetchCategories());
+      return;
     }
-  }, [categoriesLoaded]);
-
-  useEffect(() => {
-    if (!categoriesLoaded) return;
-
     const matchedCategory = categories.find((cat) => cat.key === categoryKey);
     const categoryId = matchedCategory?.id ?? null;
     const needUpdate = categoryId
