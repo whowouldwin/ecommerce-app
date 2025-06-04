@@ -2,12 +2,17 @@ import {
   Box,
   Accordion,
   AccordionItem,
-  Select,
   Button,
   Heading,
   Stack,
+  VStack,
+  Text,
+  HStack,
+  Icon,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { ChevronRightIcon } from '@chakra-ui/icons';
+import { JSX, useEffect, useState } from 'react';
+import { Category } from '@commercetools/platform-sdk';
 import { ProductFiltersProps } from './types';
 import { defaultFilters, FilterState } from '../../features/filter/filterSlice';
 import {
@@ -19,6 +24,51 @@ import { getLocalizedText } from '../../utils/localization';
 import FilterCheckboxGroup from './FilterCheckboxGroup';
 import PriceRangeFilter from './PriceRangeFilter';
 import ActiveFilters from './ActiveFilters';
+
+type CategoryWithChildren = Category & { children: CategoryWithChildren[] };
+
+const buildCategoryTree = (categories: Category[]): CategoryWithChildren[] => {
+  const map = new Map<string, CategoryWithChildren>();
+  categories.forEach((cat) => map.set(cat.id, { ...cat, children: [] }));
+  const roots: CategoryWithChildren[] = [];
+  for (const cat of map.values()) {
+    if (cat.parent?.id && map.has(cat.parent.id)) {
+      map.get(cat.parent.id)!.children.push(cat);
+    } else {
+      roots.push(cat);
+    }
+  }
+  return roots;
+};
+
+const renderCategoryTree = (
+  nodes: CategoryWithChildren[],
+  selectedIds: string[],
+  onSelect: (id: string) => void,
+  level = 0,
+): JSX.Element[] => {
+  return nodes.map((node) => (
+    <Box key={node.id} pl={level * 4} py={1}>
+      <HStack
+        spacing={2}
+        cursor="pointer"
+        onClick={() => onSelect(node.id)}
+        _hover={{ bg: 'gray.100' }}
+        w="full"
+      >
+        {level > 0 && <Icon as={ChevronRightIcon} boxSize={3} />}
+        <Text
+          fontWeight={selectedIds.includes(node.id) ? 'bold' : 'normal'}
+          color={selectedIds.includes(node.id) ? 'blue.500' : 'gray.800'}
+        >
+          {getLocalizedText(node.name, 'en-US')}
+        </Text>
+      </HStack>
+      {node.children.length > 0 &&
+        renderCategoryTree(node.children, selectedIds, onSelect, level + 1)}
+    </Box>
+  ));
+};
 
 const ProductFilters = ({
   onFilterChange,
@@ -69,27 +119,16 @@ const ProductFilters = ({
     setLocalFilters({ ...localFilters, priceRange: value });
   };
 
-  const handleCategoryChange = (key: string | null) => {
-    const cat = categories.find((c) => c.key === key);
-    setLocalFilters({ ...localFilters, categories: cat?.id ? [cat.id] : [] });
+  const handleCategorySelect = (id: string) => {
+    setLocalFilters({ ...localFilters, categories: [id] });
   };
 
   const applyFilters = () => {
     onFilterChange(localFilters);
-    if (localFilters.categories.length === 0) {
-      if (
-        categories.find((c) => c.key === null) ||
-        selectedCategoryKey !== null
-      ) {
-        onCategoryChange(null);
-      }
-      return;
-    }
     const selected = categories.find(
       (c) => c.id === localFilters.categories[0],
     );
     const newCategoryKey = selected?.key ?? null;
-
     if (newCategoryKey !== selectedCategoryKey) {
       onCategoryChange(newCategoryKey);
     }
@@ -100,6 +139,8 @@ const ProductFilters = ({
     setLocalFilters(defaultFilters);
     onCategoryChange(null);
   };
+
+  const categoryTree = buildCategoryTree(categories);
 
   return (
     <Box p={{ base: 3, md: 4 }} w="100%">
@@ -120,21 +161,18 @@ const ProductFilters = ({
         mb={{ base: 3, md: 4 }}
       >
         <AccordionItem>
-          <Select
-            value={
-              categories.find((c) => c.id === localFilters.categories[0])
-                ?.key ?? ''
-            }
-            onChange={(e) => handleCategoryChange(e.target.value || null)}
-            size={{ base: 'sm', md: 'md' }}
-          >
-            <option value="">All Categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.key ?? ''}>
-                {getLocalizedText(c.name)}
-              </option>
-            ))}
-          </Select>
+          <Box p={4}>
+            <Heading size="sm" mb={2}>
+              Category
+            </Heading>
+            <VStack align="start" spacing={1} w="full">
+              {renderCategoryTree(
+                categoryTree,
+                localFilters.categories,
+                handleCategorySelect,
+              )}
+            </VStack>
+          </Box>
         </AccordionItem>
 
         <FilterCheckboxGroup
