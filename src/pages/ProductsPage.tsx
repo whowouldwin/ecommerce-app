@@ -112,8 +112,9 @@ const ProductsPage = () => {
   }, [categoryKey, categoriesLoaded, categories]);
 
   useEffect(() => {
+    if (!categoriesLoaded) return;
     fetchProductsWithParams();
-  }, [filters, sortOption, currentPage]);
+  }, [filters, sortOption, currentPage, categoriesLoaded]);
 
   const handleFilterChange = (newFilters: FilterState) => {
     setCurrentPage(1);
