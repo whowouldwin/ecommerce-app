@@ -127,7 +127,7 @@ export const buildFilterQueryArgs = (
 
   if (filterParams.categories && filterParams.categories.length > 0) {
     queryArgs['filter.query'] = filterParams.categories.map(
-      (id) => `categories.id:"${id}"`,
+      (id) => `categories.id: subtree("${id}")`,
     );
     facets.push('categories.id');
   }
