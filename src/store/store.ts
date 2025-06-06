@@ -3,6 +3,7 @@ import { userReducer } from '../features/user/userSlice';
 import { categoryReducer } from '../features/category/categorySlice';
 import { productReducer } from '../features/product/productSlice.ts';
 import { filterReducer } from '../features/filter/filterSlice.ts';
+import { cartReducer, initCart } from '../features/cart/cartSlice.ts';
 
 const localStorageMiddleware: Middleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -16,10 +17,13 @@ export const store = configureStore({
     category: categoryReducer,
     product: productReducer,
     filters: filterReducer,
+    cart: cartReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware),
 });
+
+store.dispatch(initCart());
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

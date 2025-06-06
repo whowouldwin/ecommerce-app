@@ -13,6 +13,7 @@ import HighlightedText from './HighlightedText';
 import { getLocalizedText } from '../utils/localization.ts';
 import { extractPriceInfo, formatPrice } from '../utils/price.ts';
 import { RootState } from '../store/store';
+import AddToCartButton from './AddToCartButton.tsx';
 
 type ProductCardProps = {
   product: ProductProjection;
@@ -145,18 +146,20 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
             size="sm"
             py={{ base: 3, md: 2 }}
             flex={{ base: '1 1 100%', md: '0 1 auto' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/product/${product.id}`);
+            }}
           >
             View details
           </Button>
 
-          <Button
-            colorScheme="green"
-            size="sm"
-            py={{ base: 3, md: 2 }}
-            flex={{ base: '1 1 100%', md: '0 1 auto' }}
-          >
-            Add to Cart
-          </Button>
+          <Box onClick={(e) => e.stopPropagation()}>
+            <AddToCartButton
+              productId={product.id}
+              variantId={product.masterVariant.id}
+            />
+          </Box>
         </Flex>
       </Box>
     </Box>

@@ -15,6 +15,7 @@ import { loginUser } from '../features/user/userSlice';
 import CustomToast from '../components/CustomToast';
 import FormInput from '../components/form/FormInput';
 import { validateEmail, validatePassword } from '../utils/validation';
+import { initCart } from '../features/cart/cartSlice.ts';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ const LoginPage: React.FC = () => {
       const resultAction = await dispatch(loginUser({ email, password }));
 
       if (loginUser.fulfilled.match(resultAction)) {
+        dispatch(initCart());
         toast({
           duration: 3000,
           isClosable: true,
