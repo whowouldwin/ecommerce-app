@@ -3,7 +3,7 @@
 A modern eCommerce-Application built with **React**, **TypeScript**, **Vite**, and **CommerceTools**.  
 Developed as part of the [RS School](https://rs.school/courses/javascript) Frontend course.
 
-This project aims to simulate a real-world online store with product catalog, shopping cart, user authentication, and checkout flow.  
+This project aims to simulate a real-world online index with product catalog, shopping cart, user authentication, and checkout flow.  
 The main goal is to practice building scalable and maintainable frontend applications using a modern stack.  
 It also focuses on teamwork, Git best practices, and automated testing.
 
