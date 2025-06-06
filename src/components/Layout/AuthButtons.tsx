@@ -2,6 +2,7 @@ import { Button, VStack, HStack } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectUser, logoutUser } from '../../features/user/userSlice';
+import { resetCart } from '../../features/cart/cartSlice.ts';
 
 interface AuthButtonsProps {
   isVertical?: boolean;
@@ -25,6 +26,7 @@ const AuthButtons = ({
       .then(() => {
         navigate('/');
         onClose?.();
+        dispatch(resetCart());
       })
       .catch(console.error);
   };

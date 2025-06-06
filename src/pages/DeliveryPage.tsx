@@ -1,4 +1,5 @@
 import { Box, Center, Text } from '@chakra-ui/react';
+import CartTester from '../components/cart/CartTester.tsx';
 
 export default function DeliveryPage() {
   return (
@@ -19,6 +20,7 @@ export default function DeliveryPage() {
           Delivery Info
         </Text>
       </Center>
+      <CartTester />
     </Box>
   );
 }
