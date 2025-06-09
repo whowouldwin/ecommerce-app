@@ -5,6 +5,7 @@ import {
   Image,
   IconButton,
   Divider,
+  useToast,
 } from '@chakra-ui/react';
 import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,10 +20,33 @@ import { getLocalizedText } from '../../utils/localization.ts';
 const CartTester = () => {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartLineItems);
+  const toast = useToast();
 
   if (items.length === 0) return <Text color="gray.400">Cart is empty</Text>;
 
   const locale = 'en-US';
+
+  const handleRemove = (lineItemId: string) => {
+    dispatch(removeLineItem({ lineItemId }))
+      .unwrap()
+      .then(() =>
+        toast({
+          title: 'Item removed',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        }),
+      )
+      .catch(() =>
+        toast({
+          title: 'Failed to remove item',
+          description: 'Something went wrong. Try again.',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        }),
+      );
+  };
 
   return (
     <VStack align="stretch" spacing={4} maxW="sm">
@@ -81,7 +105,7 @@ const CartTester = () => {
                 size="xs"
                 aria-label="Remove item"
                 icon={<DeleteIcon />}
-                onClick={() => dispatch(removeLineItem({ lineItemId: li.id }))}
+                onClick={() => handleRemove(li.id)}
               />
             </HStack>
             <Divider />
