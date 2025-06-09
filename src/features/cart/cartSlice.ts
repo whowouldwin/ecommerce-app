@@ -30,23 +30,37 @@ const initialState: CartState = {
   error: null,
 };
 
-export const initCart = createAsyncThunk<Cart, void, { rejectValue: string }>(
-  'cart/init',
-  async (_, { rejectWithValue }) => {
-    try {
+export const initCart = createAsyncThunk<
+  Cart,
+  void,
+  { state: RootState; rejectValue: string }
+>('cart/init', async (_, { getState, rejectWithValue }) => {
+  try {
+    const { isAuthenticated } = getState().user;
+    if (!isAuthenticated) {
       const { body } = await apiClient
         .getApiRoot()
         .me()
-        .activeCart()
+        .carts()
         .get()
         .execute();
-      return body;
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : 'Unknown error';
-      return rejectWithValue(message);
+      if (body.results.length) {
+        return body.results[body.results.length - 1];
+      }
+      return rejectWithValue('no active carts for anonymous user');
     }
-  },
-);
+    const { body } = await apiClient
+      .getApiRoot()
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+    return body;
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    return rejectWithValue(message);
+  }
+});
 
 export const migrateCartOnLogin = createAsyncThunk<
   Cart,

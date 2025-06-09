@@ -48,11 +48,13 @@ export function getCtpClientWithRefreshTokenFlow(refreshToken: string) {
     refreshToken: refreshToken,
   };
 
-  return new ClientBuilder()
-    .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
-    .build();
+  return (
+    new ClientBuilder()
+      .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
+      .withHttpMiddleware(httpMiddlewareOptions)
+      // .withLoggerMiddleware()
+      .build()
+  );
 }
 
 export function getCtpClientCredentialsFlow() {
@@ -75,11 +77,13 @@ export function getCtpClientAnonymousFlow() {
     tokenCache: tokenCacheStore,
   };
 
-  return new ClientBuilder()
-    .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
-    .build();
+  return (
+    new ClientBuilder()
+      .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+      .withHttpMiddleware(httpMiddlewareOptions)
+      // .withLoggerMiddleware()
+      .build()
+  );
 }
 
 export function getCtpClientPasswordFlow(currentUser: UserAuthOptions) {
@@ -92,9 +96,11 @@ export function getCtpClientPasswordFlow(currentUser: UserAuthOptions) {
     tokenCache: tokenCacheStore,
   };
 
-  return new ClientBuilder()
-    .withPasswordFlow(passwordAuthMiddlewareOptions)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
-    .build();
+  return (
+    new ClientBuilder()
+      .withPasswordFlow(passwordAuthMiddlewareOptions)
+      .withHttpMiddleware(httpMiddlewareOptions)
+      // .withLoggerMiddleware()
+      .build()
+  );
 }

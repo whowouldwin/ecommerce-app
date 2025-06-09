@@ -73,12 +73,14 @@ export const retryAuthWithRefresh = async (): Promise<
   ClientResponse<Customer>
 > => {
   return await getME().catch((error) => {
-    console.log(
-      'unsuccessful attempt to restore the previous user session',
-      error,
-    );
-    removeDataFromLS(LocalStorageKey.SESSION);
-    apiClient.changeApiRoot(AuthFlowType.CREDENTIALS_FLOW);
-    return error;
+    if (error.statusCode !== 403) {
+      console.log(
+        'unsuccessful attempt to restore the previous user session',
+        error,
+      );
+      removeDataFromLS(LocalStorageKey.SESSION);
+      apiClient.changeApiRoot(AuthFlowType.CREDENTIALS_FLOW);
+      return error;
+    }
   });
 };
