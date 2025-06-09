@@ -30,6 +30,14 @@ const CartTester = () => {
         const imgSrc = li.variant?.images?.[0]?.url;
         const name = getLocalizedText(li.name, locale);
 
+        const decrease = () =>
+          dispatch(
+            changeLineItemQuantity({
+              lineItemId: li.id,
+              quantity: li.quantity - 1,
+            }),
+          );
+
         return (
           <VStack key={li.id} align="stretch" spacing={2}>
             <HStack justify="space-between">
@@ -50,15 +58,8 @@ const CartTester = () => {
                   size="xs"
                   aria-label="Decrease quantity"
                   icon={<MinusIcon />}
-                  onClick={() =>
-                    dispatch(
-                      changeLineItemQuantity({
-                        lineItemId: li.id,
-                        quantity: li.quantity - 1,
-                      }),
-                    )
-                  }
-                  isDisabled={li.quantity === 1}
+                  onClick={decrease}
+                  isDisabled={li.quantity === 0}
                 />
                 <Text>{li.quantity}</Text>
                 <IconButton

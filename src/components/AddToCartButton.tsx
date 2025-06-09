@@ -46,7 +46,7 @@ const AddToCartButton = ({ productId, variantId }: Props) => {
         icon={<MinusIcon />}
         size="xs"
         onClick={handleMinus}
-        isDisabled={qty === 1}
+        isDisabled={qty === 0}
       />
       <Text fontWeight="semibold">{qty}</Text>
       <IconButton
