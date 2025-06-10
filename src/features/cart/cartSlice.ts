@@ -165,6 +165,28 @@ export const removeLineItem = createAsyncThunk<
   },
 );
 
+export const clearCart = createAsyncThunk<
+  Cart,
+  void,
+  { state: RootState; rejectValue: string }
+>('cart/clearCart', async (_, { getState, rejectWithValue }) => {
+  const { cart } = getState().cart;
+  if (!cart) return rejectWithValue('Cart not initialised');
+  if (!cart.lineItems.length) return rejectWithValue('Cart already empty');
+
+  const actions: MyCartUpdateAction[] = cart.lineItems.map((item) => ({
+    action: 'removeLineItem' as const,
+    lineItemId: item.id,
+  }));
+
+  try {
+    return await cartUpdate(cart, actions);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    return rejectWithValue(message);
+  }
+});
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
@@ -214,7 +236,11 @@ const cartSlice = createSlice({
 
       .addCase(removeLineItem.pending, pending)
       .addCase(removeLineItem.fulfilled, fulfilled)
-      .addCase(removeLineItem.rejected, rejected);
+      .addCase(removeLineItem.rejected, rejected)
+
+      .addCase(clearCart.pending, pending)
+      .addCase(clearCart.fulfilled, fulfilled)
+      .addCase(clearCart.rejected, rejected);
   },
 });
 
