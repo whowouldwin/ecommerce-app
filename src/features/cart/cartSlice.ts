@@ -18,12 +18,14 @@ const EMPTY: readonly LineItem[] = [];
 
 interface CartState {
   cart: Cart | null;
+  totalItems: number;
   status: RequestStatus;
   error: string | null;
 }
 
 const initialState: CartState = {
   cart: null,
+  totalItems: 0,
   status: RequestStatus.IDLE,
   error: null,
 };
@@ -179,6 +181,10 @@ const cartSlice = createSlice({
     const fulfilled = (state: CartState, action: PayloadAction<Cart>) => {
       state.status = RequestStatus.IDLE;
       state.cart = action.payload;
+      state.totalItems = action.payload.lineItems.reduce(
+        (s, li) => s + li.quantity,
+        0,
+      );
     };
     const rejected = (
       state: CartState,
@@ -222,7 +228,6 @@ export const selectCartLineItems = createSelector(
   (state: RootState) => state.cart.cart?.lineItems,
   (items) => items ?? EMPTY,
 );
-export const selectCartTotalItems = (state: RootState) =>
-  state.cart.cart?.lineItems.reduce((sum, li) => sum + li.quantity, 0) ?? 0;
 export const selectCartTotalPrice = (state: RootState) =>
   state.cart.cart?.totalPrice;
+export const selectCartItemCount = (state: RootState) => state.cart.totalItems;
