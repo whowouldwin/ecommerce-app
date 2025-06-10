@@ -6,7 +6,16 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 };
 
+const breakpoints = {
+  xs: '480px',
+  sm: '550px',
+  md: '768px',
+  lg: '992px',
+  xl: '1280px',
+};
+
 const theme = extendTheme({
+  breakpoints,
   config,
   colors: {
     brand: {
