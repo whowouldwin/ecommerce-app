@@ -15,6 +15,7 @@ import { selectUser } from '../../features/user/userSlice';
 import LogoBrand from './LogoBrand.tsx';
 import AuthButtons from './AuthButtons.tsx';
 import ProfileIconButton from './ProfileIconButton';
+import BasketIconButton from '../BasketIconButton.tsx';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,6 +56,7 @@ const Header = () => {
               {!isNarrow && <AuthButtons />}
               <ProfileIconButton user={user} />
               <ThemeToggle />
+              <BasketIconButton />
             </Flex>
           </Flex>
         </Box>
