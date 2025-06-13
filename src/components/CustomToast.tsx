@@ -2,7 +2,7 @@ import { Box, Flex, Text, CloseButton } from '@chakra-ui/react';
 import { CheckCircleIcon, WarningIcon, InfoIcon } from '@chakra-ui/icons';
 import React from 'react';
 
-type ToastStatus = 'success' | 'error' | 'info';
+export type ToastStatus = 'success' | 'error' | 'info';
 
 interface CustomToastProps {
   message: string;

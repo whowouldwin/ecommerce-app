@@ -4,6 +4,7 @@ import { categoryReducer } from '../features/category/categorySlice';
 import { productReducer } from '../features/product/productSlice.ts';
 import { filterReducer } from '../features/filter/filterSlice.ts';
 import { cartReducer, initCart } from '../features/cart/cartSlice.ts';
+import { discountReducer } from '../features/discount/discountSlice.ts';
 
 const localStorageMiddleware: Middleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -18,6 +19,7 @@ export const store = configureStore({
     product: productReducer,
     filters: filterReducer,
     cart: cartReducer,
+    discount: discountReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware),
