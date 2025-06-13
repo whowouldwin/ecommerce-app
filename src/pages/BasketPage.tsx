@@ -1,4 +1,12 @@
-import { Box, Center, Text, VStack, Button, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Text,
+  VStack,
+  Button,
+  HStack,
+  Spinner,
+} from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
@@ -6,6 +14,7 @@ import {
   selectCartLineItems,
   selectCartTotalPrice,
   clearCart,
+  selectIsCartUpdating,
 } from '../features/cart/cartSlice';
 import CartItem from '../components/cart/CartItem';
 
@@ -14,9 +23,21 @@ export default function BasketPage() {
   const items = useSelector(selectCartLineItems);
   console.log(items);
   const totalPrice = useSelector(selectCartTotalPrice);
+  const isUpdating = useSelector(selectIsCartUpdating);
 
   return (
-    <Box w="100%" maxW="800px" mx="auto" p={4}>
+    <Box w="100%" maxW="800px" mx="auto" p={4} position="relative">
+      {isUpdating && (
+        <Spinner
+          size="xl"
+          thickness="4px"
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          zIndex={1}
+        />
+      )}
       <Text fontSize="3xl" fontWeight="bold" mb={6} textAlign="center">
         Delivery Info
       </Text>
@@ -61,6 +82,7 @@ export default function BasketPage() {
               variant="outline"
               size="md"
               onClick={() => dispatch(clearCart())}
+              isDisabled={isUpdating}
             >
               Clear Cart
             </Button>
