@@ -7,8 +7,11 @@ import {
   HStack,
   Avatar,
   useColorModeValue,
+  ListItem,
+  List,
+  Heading,
 } from '@chakra-ui/react';
-import { FaGithub } from 'react-icons/fa';
+import { FaCheckCircle, FaGithub } from 'react-icons/fa';
 
 interface DeveloperCardProps {
   name: string;
@@ -16,6 +19,7 @@ interface DeveloperCardProps {
   bio: string;
   photoUrl: string;
   githubUrl: string;
+  contributions?: string[];
 }
 
 const DeveloperCard: React.FC<DeveloperCardProps> = ({
@@ -24,6 +28,7 @@ const DeveloperCard: React.FC<DeveloperCardProps> = ({
   bio,
   photoUrl,
   githubUrl,
+  contributions,
 }) => {
   const cardBg = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('gray.800', 'whiteAlpha.900');
@@ -56,6 +61,28 @@ const DeveloperCard: React.FC<DeveloperCardProps> = ({
             <FaGithub size="24" />
           </Link>
         </HStack>
+        {contributions && contributions.length > 0 && (
+          <Box w="100%" mt={4} textAlign="left">
+            <Heading size="sm" mb={2}>
+              Contributions
+            </Heading>
+            <List spacing={3} fontSize="sm" color={textColor}>
+              {contributions.map((item, idx) => (
+                <ListItem
+                  key={idx}
+                  display="flex"
+                  alignItems="flex-start"
+                  gap={2}
+                >
+                  <Box mt="6px">
+                    <FaCheckCircle color="green" size={14} />
+                  </Box>
+                  <Text as="span">{item}</Text>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        )}
       </VStack>
     </Box>
   );
