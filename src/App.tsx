@@ -6,13 +6,13 @@ import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage.tsx';
 import AboutPage from './pages/AboutPage';
-import DeliveryPage from './pages/DeliveryPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProfilePage from './pages/ProfilePage.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { store } from './store/store.ts';
 import ProductsPage from './pages/ProductsPage.tsx';
 import ProductDetailsPage from './pages/ProductDetailsPage.tsx';
+import BasketPage from './pages/BasketPage.tsx';
 
 const App: React.FC = () => {
   console.log(
@@ -48,14 +48,6 @@ const App: React.FC = () => {
             element={
               <Layout showAuthButtons>
                 <AboutPage />
-              </Layout>
-            }
-          />
-          <Route
-            path="/delivery"
-            element={
-              <Layout showAuthButtons>
-                <DeliveryPage />
               </Layout>
             }
           />
@@ -101,6 +93,14 @@ const App: React.FC = () => {
               <ProtectedRoute authenticationRequired={true}>
                 <ProfilePage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/basket"
+            element={
+              <Layout showAuthButtons>
+                <BasketPage />
+              </Layout>
             }
           />
           <Route path="*" element={<NotFoundPage />} />

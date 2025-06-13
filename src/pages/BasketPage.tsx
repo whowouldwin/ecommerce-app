@@ -9,7 +9,7 @@ import {
 } from '../features/cart/cartSlice';
 import CartItem from '../components/cart/CartItem';
 
-export default function DeliveryPage() {
+export default function BasketPage() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartLineItems);
   console.log(items);
