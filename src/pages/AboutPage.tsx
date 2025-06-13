@@ -21,6 +21,11 @@ export default function AboutPage() {
       bio: 'Develops the interface and is responsible for user interaction.',
       photoUrl: leraPhoto,
       githubUrl: 'https://github.com/whowouldwin',
+      contributions: [
+        'Designed the complete UI/UX for the application in Figma, including all key pages and components',
+        'Structured and implemented the Redux store with feature-based slices: user, category, product, filter, and cart',
+        'Built the `ProtectedRoute` component to secure private routes and manage authentication-based access',
+      ],
     },
     {
       name: 'Pavel Putyrski',
