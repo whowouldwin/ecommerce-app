@@ -6,7 +6,6 @@ const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'Products', to: '/products' },
   { label: 'About Us', to: '/about' },
-  { label: 'Delivery', to: '/delivery' },
 ];
 
 const NavLinks = ({ onClick }: { onClick?: () => void }) => {
