@@ -8,12 +8,13 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { LineItem } from '@commercetools/platform-sdk';
 import { AppDispatch } from '../../store/store';
 import {
   changeLineItemQuantity,
   removeLineItem,
+  selectIsCartUpdating,
 } from '../../features/cart/cartSlice';
 import { getLocalizedText } from '../../utils/localization';
 
@@ -28,6 +29,7 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
   const imgSrc = item.variant?.images?.[0]?.url;
   const price = item.totalPrice?.centAmount ?? 0;
   const currency = item.totalPrice?.currencyCode ?? '';
+  const isUpdating = useSelector(selectIsCartUpdating);
 
   return (
     <Box
@@ -80,7 +82,7 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
                   }),
                 )
               }
-              isDisabled={item.quantity === 1}
+              isDisabled={isUpdating || item.quantity === 1}
               variant="outline"
               colorScheme="gray"
             />
@@ -97,6 +99,7 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
                   }),
                 )
               }
+              isDisabled={isUpdating}
               variant="outline"
               colorScheme="gray"
             />
@@ -108,6 +111,7 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
                 onClick={() =>
                   dispatch(removeLineItem({ lineItemId: item.id }))
                 }
+                isDisabled={isUpdating}
                 colorScheme="red"
                 variant="outline"
               />

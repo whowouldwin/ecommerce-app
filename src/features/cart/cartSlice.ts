@@ -179,6 +179,9 @@ export const removeLineItem = createAsyncThunk<
   },
 );
 
+export const selectIsCartUpdating = (state: RootState) =>
+  state.cart.status === RequestStatus.LOADING;
+
 export const clearCart = createAsyncThunk<
   Cart,
   void,
