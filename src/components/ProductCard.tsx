@@ -49,6 +49,9 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
 
   return (
     <Box
+      w="full"
+      maxW="280px"
+      mx="auto"
       borderRadius="xl"
       boxShadow="md"
       overflow="hidden"
@@ -140,19 +143,19 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
           direction={{ base: 'column', md: 'row' }}
           align="stretch"
           mt="auto"
+          flexWrap="wrap"
+          alignItems="center"
         >
-          <Button
-            variant="outline"
-            size="sm"
-            py={{ base: 3, md: 2 }}
-            flex={{ base: '1 1 100%', md: '0 1 auto' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/product/${product.id}`);
-            }}
-          >
-            View details
-          </Button>
+          <Box onClick={(e) => e.stopPropagation()}>
+            <Button
+              variant="outline"
+              size="sm"
+              w="full"
+              onClick={() => navigate(`/product/${product.id}`)}
+            >
+              View details
+            </Button>
+          </Box>
 
           <Box onClick={(e) => e.stopPropagation()}>
             <AddToCartButton
