@@ -1,4 +1,4 @@
-import { Button, HStack, Text, IconButton } from '@chakra-ui/react';
+import { Button, Box, Text, IconButton } from '@chakra-ui/react';
 import { MinusIcon, AddIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -61,7 +61,14 @@ const AddToCartButton = ({ productId, variantId }: Props) => {
   }
 
   return (
-    <HStack spacing={2}>
+    <Box
+      whiteSpace="nowrap"
+      gap={2}
+      justifyContent="space-between"
+      display="flex"
+      alignItems="center"
+      w="full"
+    >
       <IconButton
         aria-label="Decrease"
         icon={<MinusIcon />}
@@ -76,7 +83,7 @@ const AddToCartButton = ({ productId, variantId }: Props) => {
         size="xs"
         onClick={handlePlus}
       />
-    </HStack>
+    </Box>
   );
 };
 

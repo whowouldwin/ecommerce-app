@@ -44,7 +44,11 @@ const ProductList = ({
             </Box>
           )}
 
-          <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={6}>
+          <SimpleGrid
+            templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+            justifyItems="center"
+            spacing={6}
+          >
             {products.map((product) => (
               <Skeleton key={product.id} isLoaded={!loading} fadeDuration={0.3}>
                 <ProductCard
