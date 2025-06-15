@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 import HeroSection from '../components/MainPage/HeroSection.tsx';
 import CTASection from '../components/MainPage/CTASection.tsx';
 import ProductCategories from '../components/MainPage/ProductCategories.tsx';
-import DiscountList from './DiscountList.tsx';
+import DiscountList from '../components/DiscountList.tsx';
 
 const MainPage = () => {
   return (

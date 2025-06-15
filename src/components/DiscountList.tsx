@@ -19,7 +19,7 @@ import {
   fetchCartDiscounts,
   fetchDiscountCodes,
 } from '../features/discount/discountSlice.ts';
-import CustomToast, { ToastStatus } from '../components/CustomToast.tsx';
+import CustomToast, { ToastStatus } from './CustomToast.tsx';
 import discountSVG from '../assets/discount.svg';
 
 export default function DiscountList() {

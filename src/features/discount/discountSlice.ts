@@ -2,6 +2,7 @@ import { CartDiscount, DiscountCode } from '@commercetools/platform-sdk';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RequestStatus } from '../../enums/appEnums';
 import { apiClient } from '../../commercetools-environment/apiClient';
+import type { RootState } from '../../store/store.ts';
 
 export interface DiscountState {
   discountCodes: DiscountCode[];
@@ -91,3 +92,5 @@ export const discountSlice = createSlice({
 });
 
 export const discountReducer = discountSlice.reducer;
+export const selectDiscountCodes = (state: RootState) =>
+  state.discount.discountCodes;

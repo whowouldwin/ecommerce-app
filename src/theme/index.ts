@@ -10,6 +10,7 @@ const breakpoints = {
   xs: '480px',
   sm: '550px',
   md: '768px',
+  mdl: '880px',
   lg: '992px',
   xl: '1280px',
 };
@@ -36,6 +37,9 @@ const theme = extendTheme({
       200: '#2F281E',
       300: '#101828',
       400: '#E9E9F2',
+      600: '#C53030FF',
+      650: '#C10C0CFF',
+      670: '#FF0000FF',
     },
     secondary: '#D6850C',
     accent: '#FFB2A0',
@@ -92,6 +96,16 @@ const theme = extendTheme({
           color: 'white',
           _hover: {
             bg: 'brand.600',
+          },
+        },
+        solidRed: {
+          bg: 'primary.600',
+          color: 'white',
+          _hover: {
+            bg: 'primary.650',
+          },
+          _active: {
+            bg: 'primary.670',
           },
         },
       },

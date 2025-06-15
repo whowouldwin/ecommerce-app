@@ -5,28 +5,27 @@ import {
   VStack,
   Button,
   HStack,
+  Flex,
   Spinner,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch } from '../store/store';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  selectCartLineItems,
-  selectCartTotalPrice,
   clearCart,
+  selectCartLineItems,
   selectIsCartUpdating,
 } from '../features/cart/cartSlice';
 import CartItem from '../components/cart/CartItem';
+import TotalOrderContainer from '../components/cart/TotalOrderContainer.tsx';
+import { AppDispatch } from '../store/store.ts';
 
 export default function BasketPage() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartLineItems);
-  console.log(items);
-  const totalPrice = useSelector(selectCartTotalPrice);
   const isUpdating = useSelector(selectIsCartUpdating);
 
   return (
-    <Box w="100%" maxW="800px" mx="auto" p={4} position="relative">
+    <Box w="100%" maxW="1200px" mx="auto" p={4} position="relative">
       {isUpdating && (
         <Spinner
           size="xl"
@@ -42,7 +41,7 @@ export default function BasketPage() {
         Delivery Info
       </Text>
 
-      {items.length === 0 ? (
+      {!items.length && (
         <Center minH="300px">
           <VStack spacing={4}>
             <Text fontSize="2xl" fontWeight="bold" color="red.500">
@@ -64,30 +63,31 @@ export default function BasketPage() {
             </Button>
           </VStack>
         </Center>
-      ) : (
-        <VStack spacing={6} align="stretch" maxW="800px" w="100%" mx="auto">
-          {items.map((item) => (
-            <CartItem key={item.id} item={item} />
-          ))}
+      )}
 
-          <Box textAlign="right" pt={4} fontSize="xl" fontWeight="bold">
-            Total:{' '}
-            {totalPrice?.centAmount
-              ? `${(totalPrice.centAmount / 100).toFixed(2)} ${totalPrice.currencyCode}`
-              : '0.00'}
-          </Box>
-          <HStack justify="flex-end">
-            <Button
-              colorScheme="red"
-              variant="outline"
-              size="md"
-              onClick={() => dispatch(clearCart())}
-              isDisabled={isUpdating}
-            >
-              Clear Cart
-            </Button>
-          </HStack>
-        </VStack>
+      {!!items.length && (
+        <Flex flexDirection={{ base: 'column', mdl: 'row' }} gap="10px">
+          <VStack spacing={6} align="stretch" maxW="800px" w="100%" mx="auto">
+            {items.map((item) => (
+              <CartItem key={item.id} item={item} />
+            ))}
+          </VStack>
+          <Flex flexDirection="column" gap="10px">
+            <TotalOrderContainer />
+            <HStack justify="flex-end">
+              <Button
+                colorScheme="red"
+                variant="outline"
+                size="md"
+                onClick={() => dispatch(clearCart())}
+                isDisabled={isUpdating}
+                w="100%"
+              >
+                Clear Cart
+              </Button>
+            </HStack>
+          </Flex>
+        </Flex>
       )}
     </Box>
   );
