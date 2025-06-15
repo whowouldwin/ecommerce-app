@@ -141,6 +141,55 @@ export const addLineItem = createAsyncThunk<
   },
 );
 
+export const applyDiscountCode = createAsyncThunk<
+  Cart,
+  string,
+  { state: RootState; rejectValue: string }
+>('cart/applyDiscountCode', async (code, { getState, rejectWithValue }) => {
+  const { cart } = getState().cart;
+  if (!cart) return rejectWithValue('Cart not initialised');
+
+  try {
+    return await cartUpdate(cart, [
+      {
+        action: 'addDiscountCode',
+        code,
+      },
+    ]);
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : 'Failed to apply discount code';
+    return rejectWithValue(message || 'Failed to apply discount code');
+  }
+});
+
+export const removeDiscountCode = createAsyncThunk<
+  Cart,
+  string,
+  { state: RootState; rejectValue: string }
+>('cart/applyDiscountCode', async (codeID, { getState, rejectWithValue }) => {
+  const { cart } = getState().cart;
+  if (!cart) return rejectWithValue('Cart not initialised');
+  if (!cart.discountCodes?.length)
+    return rejectWithValue('No discount code to remove');
+
+  try {
+    return await cartUpdate(cart, [
+      {
+        action: 'removeDiscountCode',
+        discountCode: {
+          typeId: 'discount-code',
+          id: codeID,
+        },
+      },
+    ]);
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : 'Failed to apply discount code';
+    return rejectWithValue(message || 'Failed to apply discount code');
+  }
+});
+
 export const changeLineItemQuantity = createAsyncThunk<
   Cart,
   { lineItemId: string; quantity: number },
@@ -257,7 +306,11 @@ const cartSlice = createSlice({
 
       .addCase(clearCart.pending, pending)
       .addCase(clearCart.fulfilled, fulfilled)
-      .addCase(clearCart.rejected, rejected);
+      .addCase(clearCart.rejected, rejected)
+
+      .addCase(applyDiscountCode.pending, pending)
+      .addCase(applyDiscountCode.fulfilled, fulfilled)
+      .addCase(applyDiscountCode.rejected, rejected);
   },
 });
 
@@ -271,6 +324,10 @@ export const selectCartLineItems = createSelector(
   (state: RootState) => state.cart.cart?.lineItems,
   (items) => items ?? EMPTY,
 );
+export const selectCartPromoCodes = (state: RootState) =>
+  state.cart.cart?.discountCodes;
 export const selectCartTotalPrice = (state: RootState) =>
   state.cart.cart?.totalPrice;
+export const selectCartDiscountOnTotalPrice = (state: RootState) =>
+  state.cart.cart?.discountOnTotalPrice;
 export const selectCartItemCount = (state: RootState) => state.cart.totalItems;
