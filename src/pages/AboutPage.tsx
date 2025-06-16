@@ -73,7 +73,7 @@ export default function AboutPage() {
         </Text>
       </Box>
 
-      <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+      <SimpleGrid minChildWidth="280px" justifyItems="center" spacing={6}>
         {developers.map((dev, index) => (
           <DeveloperCard key={index} {...dev} />
         ))}
