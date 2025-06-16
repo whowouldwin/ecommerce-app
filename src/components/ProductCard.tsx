@@ -60,16 +60,20 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
       flexDirection="column"
       height="100%"
       transition="transform 0.2s ease, box-shadow 0.2s ease"
-      cursor="pointer"
-      onClick={() => {
-        navigate(`/product/${product.id}`);
-      }}
       _hover={{
         transform: 'scale(1.02)',
         boxShadow: 'lg',
       }}
     >
-      <Box h="200px" w="100%" overflow="hidden">
+      <Box
+        h="200px"
+        w="100%"
+        overflow="hidden"
+        onClick={() => {
+          navigate(`/product/${product.id}`);
+        }}
+        cursor="pointer"
+      >
         <Image
           src={imageUrl}
           alt={getLocalizedText(product.name)}
@@ -161,6 +165,7 @@ const ProductCard = ({ product, searchQuery = '' }: ProductCardProps) => {
             <AddToCartButton
               productId={product.id}
               variantId={product.masterVariant.id}
+              sizeButton="sm"
             />
           </Box>
         </Flex>

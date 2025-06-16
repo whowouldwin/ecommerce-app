@@ -52,15 +52,15 @@ const ImageBlock: FC<ImageBlockProps> = ({
       <Flex alignItems="center" position="relative" w="full" h="100%">
         {imageIndex > 0 && (
           <IconButton
-            icon={<ChevronLeftIcon />}
+            icon={<ChevronLeftIcon boxSize={8} />}
             position="absolute"
-            left="0"
+            left="2px"
             top="50%"
             transform="translateY(-50%)"
             onClick={handlePrev}
             aria-label="Previous image"
             variant="ghost"
-            color="white"
+            color="brand.400"
             zIndex="1"
           />
         )}
@@ -73,7 +73,7 @@ const ImageBlock: FC<ImageBlockProps> = ({
           objectFit="contain"
           opacity={showImage ? 1 : 0}
           transition="opacity 0.3s ease-in-out"
-          borderRadius="sm"
+          borderRadius="md"
           cursor={typeBlock === 'base' ? 'pointer' : 'default'}
           onClick={() => {
             if (typeBlock === 'base') callBack(imageIndex, 'open');
@@ -82,31 +82,31 @@ const ImageBlock: FC<ImageBlockProps> = ({
 
         {imageIndex < imageData.length - 1 && (
           <IconButton
-            icon={<ChevronRightIcon />}
+            icon={<ChevronRightIcon boxSize={8} />}
             position="absolute"
-            right="0"
+            right="2px"
             top={'50%'}
             transform="translateY(-50%)"
             onClick={handleNext}
             aria-label="Next image"
             variant="ghost"
-            color="white"
+            color="brand.400"
             zIndex="1"
           />
         )}
 
         {typeBlock === 'modal' && (
           <IconButton
-            icon={<SmallCloseIcon />}
+            icon={<SmallCloseIcon boxSize={8} />}
             position="absolute"
-            right="0"
+            right="2px"
             top="10px"
             onClick={() => {
               callBack(imageIndex, 'close');
             }}
             aria-label="Next image"
             variant="ghost"
-            color="white"
+            color="brand.400"
             zIndex="1"
           />
         )}
@@ -117,6 +117,7 @@ const ImageBlock: FC<ImageBlockProps> = ({
           h="70px"
           spacing={3}
           overflowX="auto"
+          justifyContent="center"
           css={{
             '&::-webkit-scrollbar': {
               height: '8px',
@@ -153,7 +154,10 @@ const ImageBlock: FC<ImageBlockProps> = ({
                 }, 150);
               }}
               transition="all 0.2s"
-              _hover={{ opacity: 0.8 }}
+              _hover={{
+                opacity: 0.8,
+                transform: 'scale(1.05)',
+              }}
             />
           ))}
         </HStack>
