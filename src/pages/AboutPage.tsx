@@ -40,6 +40,11 @@ export default function AboutPage() {
       bio: 'Develops the interface and is responsible for user interaction.',
       photoUrl: ninaPhoto,
       githubUrl: 'https://github.com/ninaevlash',
+      contributions: [
+        'Managed the project workflow and tasks using Jira board, ensuring efficient sprint planning and progress tracking',
+        'Designed the visual layout of the Registration, Login pages and "About Us" page maintaining consistent UI/UX standards',
+        'Developed the User Profile page, including integration of core functionalities and API connections',
+      ],
     },
   ];
 
@@ -96,9 +101,9 @@ export default function AboutPage() {
             w={24}
             borderRadius="full"
             objectFit="cover"
+            transition="transform 0.3s ease"
             _hover={{
               transform: 'scale(1.1)',
-              transition: 'transform 0.3s ease',
             }}
           />
         </Link>
