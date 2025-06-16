@@ -40,6 +40,7 @@ const DeveloperCard: React.FC<DeveloperCardProps> = ({
       boxShadow="md"
       p={6}
       w="100%"
+      h="100%"
       maxW="sm"
       textAlign="center"
     >

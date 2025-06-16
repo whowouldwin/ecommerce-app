@@ -12,9 +12,6 @@ import {
   Tabs,
   Button,
   Spinner,
-  useNumberInput,
-  HStack,
-  Input,
   Spacer,
   ModalBody,
   ModalContent,
@@ -26,6 +23,7 @@ import { Product, Image as ImageSDK } from '@commercetools/platform-sdk';
 import { getProduct } from '../services';
 import ImageBlock from '../components/product-details/ImageBlock.tsx';
 import noImage from '../assets/no-image-card.jpg';
+import AddToCartButton from '../components/AddToCartButton.tsx';
 
 const imageNotFound: ImageSDK = {
   url: noImage,
@@ -58,7 +56,6 @@ const ProductDetailsPage: FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [state, setState] = useState(INITIAL_STATE);
-  // const [selectedProduct, setSelectedProduct] = useState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageIndex, setImageIndex] = useState(0);
 
@@ -104,18 +101,6 @@ const ProductDetailsPage: FC = () => {
     }
   }, [id]);
 
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 1,
-      min: 1,
-      max: 500,
-    });
-
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
-
   if (state.isLoading) {
     return (
       <Box
@@ -156,8 +141,6 @@ const ProductDetailsPage: FC = () => {
     imageIndexFromChild: number,
     action: 'open' | 'close',
   ) => {
-    // console.log('imageIndexFromChild', imageIndexFromChild);
-    // console.log('imageIndex', imageIndex);
     if (imageIndex !== imageIndexFromChild) {
       setImageIndex(imageIndexFromChild);
     }
@@ -254,19 +237,13 @@ const ProductDetailsPage: FC = () => {
               )}
 
               <Spacer />
-              <Text>Select the quantity of goods:</Text>
-              <HStack maxW="200px">
-                <Button {...inc}>+</Button>
-                <Input {...input} textAlign="center" />
-                <Button {...dec}>-</Button>
-              </HStack>
-              <Button
-                variant="outline"
-                colorScheme="red"
-                w={{ base: '200px', md: 'full' }}
-              >
-                Add to Card
-              </Button>
+              <AddToCartButton
+                productId={state.productData.id}
+                variantId={
+                  state.productData.masterData.current.masterVariant.id
+                }
+                sizeButton="md"
+              />
             </Flex>
           </Flex>
           <Tabs isFitted variant="enclosed">

@@ -1,11 +1,12 @@
 import {
-  SimpleGrid,
   Heading,
   VStack,
   Box,
   Image,
   Link,
   Text,
+  WrapItem,
+  Wrap,
 } from '@chakra-ui/react';
 import DeveloperCard from '../components/AboutUsPage/DeveloperCard';
 import leraPhoto from '../assets/images/lera.jpg';
@@ -29,9 +30,14 @@ export default function AboutPage() {
     },
     {
       name: 'Pavel Putyrski',
-      role: 'Frontend Developer',
-      bio: 'Creates and maintains the server part of the application.',
+      role: 'Team lead/Frontend Developer',
+      bio: 'Creates and maintains the server side and underlying application logic.',
       photoUrl: pavelPhoto,
+      contributions: [
+        'Integrated the entire application with the Commercetools platform using the official SDK',
+        'Configured the SDK client and implemented customer session handling, including login, logout, token refresh, and auto-authentication for secure and scalable API access',
+        'Developed components, built application logic and bug fixing',
+      ],
       githubUrl: 'https://github.com/privatepython',
     },
     {
@@ -54,10 +60,18 @@ export default function AboutPage() {
         About Us
       </Heading>
 
-      <Box maxW="6xl" mx="auto" px={4}>
+      <Box
+        maxW="6xl"
+        mx="auto"
+        px={6}
+        py={2}
+        borderRadius="lg"
+        boxShadow="0px -5px 5px -5px #68d39185"
+        w={'90%'}
+      >
         <Text
           fontSize="lg"
-          textAlign="justify"
+          textAlign="center"
           lineHeight="tall"
           color="gray.600"
           _dark={{ color: 'gray.300' }}
@@ -66,32 +80,47 @@ export default function AboutPage() {
           about building modern, responsive, and user-friendly web applications.
           Currently, we’re sharpening our skills through the RS School course.
           This website is part of our journey: a space where we practice,
-          explore, and bring ideas to life using HTML, CSS, JavaScript, React,
-          and other cutting-edge technologies. Our goal? To become not just
-          coders, but creators — developers who build with purpose, clarity, and
-          care. We’re glad you’re here.
+          explore, and bring ideas to life using HTML, CSS, TypeScript, React,
+          Chakra UI and other cutting-edge technologies. Our goal? To become not
+          just coders, but creators — developers who build with purpose,
+          clarity, and care. We’re glad you’re here.
         </Text>
       </Box>
 
-      <SimpleGrid minChildWidth="280px" justifyItems="center" spacing={6}>
+      <Wrap spacing={6} justify="center">
         {developers.map((dev, index) => (
-          <DeveloperCard key={index} {...dev} />
+          <WrapItem key={index}>
+            <DeveloperCard {...dev} />
+          </WrapItem>
         ))}
-      </SimpleGrid>
+      </Wrap>
+
+      <Box
+        maxW="6xl"
+        mx="auto"
+        px={4}
+        py={2}
+        borderRadius="lg"
+        boxShadow="0px 5px 5px -5px #68d39185"
+        w={'90%'}
+      >
+        <Text
+          fontSize="lg"
+          textAlign="justify"
+          lineHeight="tall"
+          color="gray.600"
+          _dark={{ color: 'gray.300' }}
+        >
+          We use GitHub flow with feature branches and pull requests, always
+          reviewing each other’s code to maintain high quality. Our team meets
+          daily on Discord to stay in sync and plan tasks. We manage our sprints
+          in GitHub Projects and use CI to run ESLint and tests automatically.
+          Everything is deployed to Netlify after each merge. We also hold
+          retrospectives and planning sessions in Jira to keep improving.
+        </Text>
+      </Box>
 
       <Box pt={5} textAlign="center">
-        <Text
-          fontSize="md"
-          color="gray.500"
-          mb={2}
-          _dark={{ color: 'gray.400' }}
-        >
-          This project was completed as part of a training course
-          JavaScript/Front-end 2024Q4
-          <Link href="https://rs.school" isExternal color="teal.500" ml={2}>
-            RS School
-          </Link>
-        </Text>
         <Link href="https://rs.school" isExternal>
           <Image
             src={rsPhoto}
@@ -105,8 +134,21 @@ export default function AboutPage() {
             _hover={{
               transform: 'scale(1.1)',
             }}
+            mb={2}
           />
         </Link>
+        <Text
+          fontSize="md"
+          color="gray.500"
+          mb={2}
+          _dark={{ color: 'gray.400' }}
+        >
+          This project was completed as part of a training course
+          JavaScript/Front-end 2024Q4
+          <Link href="https://rs.school" isExternal color="teal.500" ml={2}>
+            RS School
+          </Link>
+        </Text>
       </Box>
     </VStack>
   );

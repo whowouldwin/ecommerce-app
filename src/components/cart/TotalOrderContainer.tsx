@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TypedMoney } from '@commercetools/platform-sdk';
-import { useNavigate } from 'react-router-dom';
 import {
   clearCart,
   selectCartDiscountOnTotalPrice,
@@ -29,7 +28,6 @@ function getPriceFromObjectPrice(priceObj: TypedMoney) {
 
 const TotalOrderContainer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const itemCount = useAppSelector(selectCartItemCount);
   const totalPriceObject = useSelector(selectCartTotalPrice);
@@ -139,19 +137,19 @@ const TotalOrderContainer = () => {
         onClose={() => {
           dispatch(clearCart());
           onClose();
-          navigate('/');
         }}
         size="4xl"
         isCentered
       >
         <ModalOverlay />
-        <ModalContent bg="black" p={4} w={'80%'} h={'80%'}>
+        <ModalContent bg="black" p={4} w={'80%'} h={'80%'} borderRadius="2xl">
           <ModalBody
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
             gap="20px"
+            color="white"
           >
             <Heading>Your order has been successfully placed!</Heading>
             <Text>
@@ -162,10 +160,9 @@ const TotalOrderContainer = () => {
               onClick={() => {
                 dispatch(clearCart());
                 onClose();
-                navigate('/');
               }}
             >
-              go to home page
+              Close
             </Button>
           </ModalBody>
         </ModalContent>
