@@ -7,9 +7,12 @@ import {
   HStack,
   Flex,
   Spinner,
+  IconButton,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { useState } from 'react';
 import {
   clearCart,
   selectCartLineItems,
@@ -23,6 +26,8 @@ export default function BasketPage() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartLineItems);
   const isUpdating = useSelector(selectIsCartUpdating);
+  const [isShowConfirmationDeleting, setIsShowConfirmationDeleting] =
+    useState(false);
 
   return (
     <Box w="100%" maxW="1200px" mx="auto" p={4} position="relative">
@@ -74,17 +79,45 @@ export default function BasketPage() {
           </VStack>
           <Flex flexDirection="column" gap="10px">
             <TotalOrderContainer />
-            <HStack justify="flex-end">
-              <Button
-                colorScheme="red"
-                variant="outline"
-                size="md"
-                onClick={() => dispatch(clearCart())}
-                isDisabled={isUpdating}
-                w="100%"
-              >
-                Clear Cart
-              </Button>
+            <HStack justify="center">
+              {!isShowConfirmationDeleting && (
+                <Button
+                  colorScheme="red"
+                  variant="outline"
+                  size="md"
+                  onClick={() => {
+                    setIsShowConfirmationDeleting(true);
+                  }}
+                  isDisabled={isUpdating}
+                  w="100%"
+                >
+                  Clear Cart
+                </Button>
+              )}
+              {isShowConfirmationDeleting && (
+                <HStack px={2}>
+                  <Text>Are you sure to empty the cart?</Text>
+                  <IconButton
+                    colorScheme="green"
+                    variant="outline"
+                    aria-label="confirm"
+                    icon={<CheckIcon />}
+                    onClick={() => {
+                      dispatch(clearCart());
+                      setIsShowConfirmationDeleting(false);
+                    }}
+                  ></IconButton>
+                  <IconButton
+                    colorScheme="red"
+                    variant="outline"
+                    aria-label="cancel"
+                    icon={<CloseIcon />}
+                    onClick={() => {
+                      setIsShowConfirmationDeleting(false);
+                    }}
+                  ></IconButton>
+                </HStack>
+              )}
             </HStack>
           </Flex>
         </Flex>
