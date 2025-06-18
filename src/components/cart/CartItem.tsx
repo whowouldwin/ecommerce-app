@@ -17,6 +17,7 @@ import {
   selectIsCartUpdating,
 } from '../../features/cart/cartSlice';
 import { getLocalizedText } from '../../utils/localization';
+import { formatPrice } from '../../utils/price.ts';
 
 interface CartItemProps {
   item: LineItem;
@@ -30,6 +31,16 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
   const price = item.totalPrice?.centAmount ?? 0;
   const currency = item.totalPrice?.currencyCode ?? '';
   const isUpdating = useSelector(selectIsCartUpdating);
+  const itemPrice = formatPrice(
+    item.price.value.centAmount,
+    item.price.value.currencyCode,
+  );
+  const itemDiscountedPrice =
+    item.price.discounted &&
+    formatPrice(
+      item.price.discounted.value.centAmount,
+      item.price.discounted.value.currencyCode,
+    );
 
   return (
     <Box
@@ -59,16 +70,41 @@ const CartItem = ({ item, locale = 'en-US' }: CartItemProps) => {
           />
         )}
 
-        <VStack align={{ base: 'center', sm: 'start' }} spacing={1} flex="1">
+        <VStack
+          align={{ base: 'center', sm: 'start' }}
+          mb={{ base: '15px', sm: '0' }}
+          spacing={1}
+          flex="1"
+        >
           <Text fontWeight="bold" fontSize="lg">
             {name}
           </Text>
-          <Text fontSize="md" color="gray.600" _dark={{ color: 'gray.400' }}>
-            {(price / 100).toFixed(2)} {currency}
-          </Text>
+          {itemDiscountedPrice ? (
+            <HStack>
+              <Text fontWeight="bold" color="red.500">
+                {itemDiscountedPrice}
+              </Text>
+              <Text as="s" color="gray.500" fontSize="sm">
+                {itemPrice}
+              </Text>
+            </HStack>
+          ) : (
+            <Text fontWeight="bold" color="green.500">
+              {itemPrice}
+            </Text>
+          )}
         </VStack>
 
-        <VStack spacing={2}>
+        <VStack spacing={4}>
+          <Text
+            px={4}
+            boxShadow="0px 5px 5px -5px rgb(197, 48, 48)"
+            fontSize="md"
+            color="gray.600"
+            _dark={{ color: 'gray.400' }}
+          >
+            {(price / 100).toFixed(2)} {currency}
+          </Text>
           <HStack>
             <IconButton
               size="sm"
