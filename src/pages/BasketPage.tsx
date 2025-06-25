@@ -6,18 +6,13 @@ import {
   Button,
   HStack,
   Flex,
-  Spinner,
   IconButton,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
-import {
-  clearCart,
-  selectCartLineItems,
-  selectIsCartUpdating,
-} from '../features/cart/cartSlice';
+import { clearCart, selectCartLineItems } from '../features/cart/cartSlice';
 import CartItem from '../components/cart/CartItem';
 import TotalOrderContainer from '../components/cart/TotalOrderContainer.tsx';
 import { AppDispatch } from '../store/store.ts';
@@ -25,23 +20,11 @@ import { AppDispatch } from '../store/store.ts';
 export default function BasketPage() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartLineItems);
-  const isUpdating = useSelector(selectIsCartUpdating);
   const [isShowConfirmationDeleting, setIsShowConfirmationDeleting] =
     useState(false);
 
   return (
-    <Box w="100%" maxW="1200px" mx="auto" p={4} position="relative">
-      {isUpdating && (
-        <Spinner
-          size="xl"
-          thickness="4px"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          zIndex={1}
-        />
-      )}
+    <Box w="100%" maxW="1200px" mx="auto" p={4}>
       <Text fontSize="3xl" fontWeight="bold" mb={6} textAlign="center">
         Delivery Info
       </Text>
@@ -88,7 +71,6 @@ export default function BasketPage() {
                   onClick={() => {
                     setIsShowConfirmationDeleting(true);
                   }}
-                  isDisabled={isUpdating}
                   w="100%"
                 >
                   Clear Cart
