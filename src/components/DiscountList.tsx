@@ -64,62 +64,60 @@ export default function DiscountList() {
       <Flex flexDirection="column" gap={4}>
         {cartDiscounts.map((cartDiscount: CartDiscount) => {
           return (
-            <>
-              <Flex
-                key={cartDiscount.id}
-                flexDirection={{ base: 'column', lg: 'row' }}
-                justifyContent={{ base: 'column', lg: 'space-between' }}
-                borderRadius="xl"
-                boxShadow="md"
-                bg={discountBg}
-                p={4}
-                gap={6}
-              >
-                <HStack alignSelf="center" minW={{ sm: '300px' }}>
-                  <Image src={discountSVG} alt="discount image" w={'50px'} />
-                  <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-                    {cartDiscount.name['en-US']}
-                  </Text>
-                </HStack>
-                <Text
-                  boxShadow="0px -5px 5px -5px rgba(0, 144, 255, 0.6)"
-                  w="100%"
-                  textAlign={'center'}
-                >
-                  {cartDiscount.description?.['en-US'] || ''}
+            <Flex
+              key={cartDiscount.id}
+              flexDirection={{ base: 'column', lg: 'row' }}
+              justifyContent={{ base: 'column', lg: 'space-between' }}
+              borderRadius="xl"
+              boxShadow="md"
+              bg={discountBg}
+              p={4}
+              gap={6}
+            >
+              <HStack alignSelf="center" minW={{ sm: '300px' }}>
+                <Image src={discountSVG} alt="discount image" w={'50px'} />
+                <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+                  {cartDiscount.name['en-US']}
                 </Text>
-                {discountCodes.map((discountCode: DiscountCode) => {
-                  if (
-                    discountCode.cartDiscounts.some(
-                      (cartDiscountInCode) =>
-                        cartDiscountInCode.id === cartDiscount.id,
-                    )
-                  ) {
-                    return (
-                      <Tag
-                        key={discountCode.key}
-                        variant="outline"
-                        colorScheme="blue"
-                        minW="150px"
-                        h="40px"
-                        justifyContent="space-between"
-                        mx={{ base: 'auto', lg: '0' }}
-                      >
-                        <TagLabel w="100%">{discountCode.code}</TagLabel>
-                        <TagRightIcon
-                          onClick={() =>
-                            copyDiscountCodeToClipboard(discountCode.code)
-                          }
-                          as={CopyIcon}
-                          cursor="pointer"
-                          _hover={{ opacity: '0.7' }}
-                        />
-                      </Tag>
-                    );
-                  }
-                })}
-              </Flex>
-            </>
+              </HStack>
+              <Text
+                boxShadow="0px -5px 5px -5px rgba(0, 144, 255, 0.6)"
+                w="100%"
+                textAlign={'center'}
+              >
+                {cartDiscount.description?.['en-US'] || ''}
+              </Text>
+              {discountCodes.map((discountCode: DiscountCode) => {
+                if (
+                  discountCode.cartDiscounts.some(
+                    (cartDiscountInCode) =>
+                      cartDiscountInCode.id === cartDiscount.id,
+                  )
+                ) {
+                  return (
+                    <Tag
+                      key={discountCode.key}
+                      variant="outline"
+                      colorScheme="blue"
+                      minW="150px"
+                      h="40px"
+                      justifyContent="space-between"
+                      mx={{ base: 'auto', lg: '0' }}
+                    >
+                      <TagLabel w="100%">{discountCode.code}</TagLabel>
+                      <TagRightIcon
+                        onClick={() =>
+                          copyDiscountCodeToClipboard(discountCode.code)
+                        }
+                        as={CopyIcon}
+                        cursor="pointer"
+                        _hover={{ opacity: '0.7' }}
+                      />
+                    </Tag>
+                  );
+                }
+              })}
+            </Flex>
           );
         })}
       </Flex>
