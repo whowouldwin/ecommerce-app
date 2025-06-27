@@ -26,6 +26,9 @@ import {
 } from '../utils/validation';
 import FormInput from '../components/form/FormInput';
 import AddressFormSection from '../components/addresses/AddressFormSection';
+import { apiClient } from '../commercetools-environment/apiClient.ts';
+import { AuthFlowType } from '../enums/appEnums.ts';
+import { initCart } from '../features/cart/cartSlice.ts';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -108,6 +111,11 @@ const RegisterPage: React.FC = () => {
         defaultShippingAddress: form.defaultShippingAddress,
       });
 
+      apiClient.changeApiRoot(AuthFlowType.PASSWORD_FLOW, {
+        username: form.email.trim(),
+        password: form.password,
+      });
+
       await dispatch(
         loginUser({ email: form.email.trim(), password: form.password }),
       )
@@ -115,6 +123,8 @@ const RegisterPage: React.FC = () => {
         .catch(() => {
           throw new Error('Login failed after registration.');
         });
+
+      await dispatch(initCart());
 
       toast({
         description: 'You are now registered.',
